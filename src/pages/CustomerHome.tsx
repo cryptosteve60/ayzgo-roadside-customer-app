@@ -10,6 +10,9 @@ import EmergencyButton from "@/components/EmergencyButton";
 import SafetyOverlay from "@/components/SafetyOverlay";
 import CommunityOverlay from "@/components/CommunityOverlay";
 import ServiceRequestOverlay from "@/components/ServiceRequestOverlay";
+import LocationOverlay from "@/components/LocationOverlay";
+import SupportOverlay from "@/components/SupportOverlay";
+import NotificationsOverlay from "@/components/NotificationsOverlay";
 
 const CustomerHome: React.FC = () => {
   const { currentRequest, currentLocation } = useApp();
@@ -36,6 +39,15 @@ const CustomerHome: React.FC = () => {
       
       {/* Community Overlay */}
       <CommunityOverlay />
+      
+      {/* Location Overlay */}
+      <LocationOverlay />
+      
+      {/* Support Chat Overlay */}
+      <SupportOverlay />
+      
+      {/* Notifications Overlay */}
+      <NotificationsOverlay />
       
       {/* Service Request Overlay */}
       <ServiceRequestOverlay />
