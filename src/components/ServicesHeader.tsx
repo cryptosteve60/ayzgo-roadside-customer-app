@@ -8,7 +8,7 @@ export default function ServicesHeader() {
   
   return (
     <header className="border-b bg-white/95 backdrop-blur supports-[backdrop-filter]:bg-white/60 sticky top-0 z-40">
-      <div className="container max-w-7xl mx-auto px-4 py-4">
+      <div className="container max-w-7xl mx-auto px-4 py-3">
         <div className="flex items-center justify-between">
           <div className="flex items-center gap-2">
             <Truck className="h-6 w-6 text-primary" />
@@ -16,8 +16,8 @@ export default function ServicesHeader() {
           </div>
           
           <div className="flex items-center gap-2">
-            <Truck className="h-5 w-5 text-primary" />
-            <span className="font-medium text-primary">Roadside Assistance</span>
+            <Truck className="h-5 w-5 text-white" />
+            <span className="font-medium text-white">Roadside Assistance</span>
           </div>
         </div>
       </div>
