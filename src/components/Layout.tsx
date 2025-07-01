@@ -11,7 +11,11 @@ const Layout: React.FC<LayoutProps> = ({ children }) => {
   const location = useLocation();
   
   return (
-    <div className="min-h-screen bg-background flex flex-col">
+    <img 
+      src="/placeholder.svg" 
+      alt="App Background" 
+      className="min-h-screen bg-background flex flex-col object-cover w-full"
+    >
       {/* Header */}
       <header className="flex justify-between items-center p-4 border-b bg-primary text-primary-foreground">
         <div className="flex items-center gap-2">
@@ -74,7 +78,7 @@ const Layout: React.FC<LayoutProps> = ({ children }) => {
           </Link>
         </div>
       </nav>
-    </div>
+    </img>
   );
 };
 
