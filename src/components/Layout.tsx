@@ -27,7 +27,7 @@ const Layout: React.FC<LayoutProps> = ({ children }) => {
         {children}
       </main>
       
-      {/* Footer Navigation - Sticky */}
+      {/* Footer Navigation - Sticky at bottom */}
       <nav className="border-t p-4 bg-background sticky bottom-0 z-50">
         <div className="flex justify-around items-center">
           <Link 

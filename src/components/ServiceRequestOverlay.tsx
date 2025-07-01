@@ -3,7 +3,8 @@ import React, { useState } from 'react';
 import { Button } from '@/components/ui/button';
 import { Card } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
-import { MapPin, Search, Battery, Car, Fuel, Lock, Flag, Zap } from 'lucide-react';
+import { Badge } from '@/components/ui/badge';
+import { MapPin, Search, Battery, Car, Fuel, Lock, Flag, Zap, Clock, Users } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 import { ServiceType } from '@/contexts/AppContext';
 
@@ -13,17 +14,74 @@ const ServiceRequestOverlay: React.FC = () => {
   const navigate = useNavigate();
 
   const services = [
-    { type: 'battery' as ServiceType, name: 'Battery Jump', icon: Battery, price: 49 },
-    { type: 'tire' as ServiceType, name: 'Tire Change', icon: Car, price: 69 },
-    { type: 'fuel' as ServiceType, name: 'Fuel Delivery', icon: Fuel, price: 45 },
-    { type: 'lockout' as ServiceType, name: 'Lockout', icon: Lock, price: 75 },
-    { type: 'tow' as ServiceType, name: 'Towing', icon: Flag, price: 99 },
-    { type: 'charging' as ServiceType, name: 'EV Charging', icon: Zap, price: 59 }
+    { 
+      type: 'battery' as ServiceType, 
+      name: 'Battery Jump', 
+      icon: Battery, 
+      price: 49,
+      availability: 'Available',
+      eta: '8-12 min',
+      providersNearby: 4
+    },
+    { 
+      type: 'tire' as ServiceType, 
+      name: 'Tire Change', 
+      icon: Car, 
+      price: 69,
+      availability: 'Available',
+      eta: '10-15 min',
+      providersNearby: 3
+    },
+    { 
+      type: 'fuel' as ServiceType, 
+      name: 'Fuel Delivery', 
+      icon: Fuel, 
+      price: 45,
+      availability: 'Available',
+      eta: '12-18 min',
+      providersNearby: 5
+    },
+    { 
+      type: 'lockout' as ServiceType, 
+      name: 'Lockout', 
+      icon: Lock, 
+      price: 75,
+      availability: 'Limited',
+      eta: '15-25 min',
+      providersNearby: 2
+    },
+    { 
+      type: 'tow' as ServiceType, 
+      name: 'Towing', 
+      icon: Flag, 
+      price: 99,
+      availability: 'Available',
+      eta: '20-30 min',
+      providersNearby: 3
+    },
+    { 
+      type: 'charging' as ServiceType, 
+      name: 'EV Charging', 
+      icon: Zap, 
+      price: 59,
+      availability: 'Available',
+      eta: '10-15 min',
+      providersNearby: 2
+    }
   ];
 
   const handleServiceSelect = (serviceType: ServiceType) => {
     navigate(`/request/${serviceType}`);
     setIsOpen(false);
+  };
+
+  const getAvailabilityColor = (availability: string) => {
+    switch (availability) {
+      case 'Available': return 'bg-green-100 text-green-800';
+      case 'Limited': return 'bg-yellow-100 text-yellow-800';
+      case 'Busy': return 'bg-red-100 text-red-800';
+      default: return 'bg-gray-100 text-gray-800';
+    }
   };
 
   if (!isOpen) {
@@ -56,19 +114,45 @@ const ServiceRequestOverlay: React.FC = () => {
             <Search className="absolute right-3 top-1/2 transform -translate-y-1/2 h-5 w-5 text-muted-foreground" />
           </div>
 
+          <div className="mb-4">
+            <h3 className="font-bold text-lg mb-2">Services Available in Your Area</h3>
+            <p className="text-sm text-muted-foreground">Real-time availability and estimated arrival times</p>
+          </div>
+
           <div className="mb-6">
-            <h3 className="font-bold text-lg mb-4">What do you need help with?</h3>
-            <div className="grid grid-cols-2 gap-3">
+            <div className="grid grid-cols-1 gap-3">
               {services.map((service) => (
                 <Button
                   key={service.type}
                   variant="outline"
-                  className="h-16 flex flex-col gap-1 p-4"
+                  className="h-auto p-4 flex justify-between items-center text-left"
                   onClick={() => handleServiceSelect(service.type)}
                 >
-                  <service.icon className="h-6 w-6" />
-                  <span className="text-sm font-medium">{service.name}</span>
-                  <span className="text-xs text-muted-foreground">${service.price}</span>
+                  <div className="flex items-center gap-3">
+                    <service.icon className="h-6 w-6 text-primary" />
+                    <div>
+                      <div className="font-medium">{service.name}</div>
+                      <div className="text-sm text-muted-foreground flex items-center gap-3">
+                        <span className="flex items-center gap-1">
+                          <Clock className="h-3 w-3" />
+                          {service.eta}
+                        </span>
+                        <span className="flex items-center gap-1">
+                          <Users className="h-3 w-3" />
+                          {service.providersNearby} nearby
+                        </span>
+                      </div>
+                    </div>
+                  </div>
+                  <div className="text-right">
+                    <div className="font-bold text-lg">${service.price}</div>
+                    <Badge 
+                      className={`text-xs ${getAvailabilityColor(service.availability)}`}
+                      variant="secondary"
+                    >
+                      {service.availability}
+                    </Badge>
+                  </div>
                 </Button>
               ))}
             </div>
