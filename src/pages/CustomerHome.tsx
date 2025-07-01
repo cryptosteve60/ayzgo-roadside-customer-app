@@ -1,146 +1,171 @@
-
 import React from "react";
-import { useApp } from "@/contexts/AppContext";
-import ServiceCard from "@/components/ServiceCard";
-import MapView from "@/components/MapView";
-import SurgePricingBanner from "@/components/SurgePricingBanner";
-import { Badge } from "@/components/ui/badge";
+import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-import { Shield, Phone, Crown } from "lucide-react";
-import { useSubscription } from "@/hooks/useSubscription";
-import { useSurgePricing } from "@/hooks/useSurgePricing";
+import { Badge } from "@/components/ui/badge";
+import ServicesGrid from "@/components/ServicesGrid";
+import ServicesHeader from "@/components/ServicesHeader";
+import ServicesHero from "@/components/ServicesHero";
+import MapView from "@/components/MapView";
+import { useApp } from "@/contexts/AppContext";
+import { Clock, MapPin, Star, AlertTriangle } from "lucide-react";
 import { useNavigate } from "react-router-dom";
+import SurgePricingBanner from "@/components/SurgePricingBanner";
+import { useSurgePricing } from "@/hooks/useSurgePricing";
+import { useSubscription } from "@/hooks/useSubscription";
+import EmergencyButton from "@/components/EmergencyButton";
+import FamilyTracker from "@/components/FamilyTracker";
+import VehicleHealthCard from "@/components/VehicleHealthCard";
+import CommunityFeed from "@/components/CommunityFeed";
 
 const CustomerHome: React.FC = () => {
-  const navigate = useNavigate();
-  const {
-    currentLocation,
-    currentRequest,
-    customer
-  } = useApp();
-  
+  const { customer, currentRequest, requestHistory, currentLocation } = useApp();
+  const { surge } = useSurgePricing();
   const { subscription } = useSubscription();
-  const { surge, calculateSurgePrice } = useSurgePricing();
-  
-  const isPremium = subscription.tier.priority > 1;
+  const navigate = useNavigate();
 
-  return <div className="flex flex-col gap-5">
-      {/* Welcome Section */}
-      <section className="text-center">
-        <h1 className="text-2xl font-bold mb-2">
-          {customer ? `Hey ${customer.name.split(' ')[0]}!` : 'Welcome to Ayzgo'}
-        </h1>
-        <p className="text-muted-foreground">Need roadside assistance? We've got your back! 🚗⚡</p>
-        
-        {/* Subscription Status */}
-        <div className="flex items-center justify-center gap-2 mt-2">
-          <Badge variant={isPremium ? "default" : "secondary"} className="flex items-center gap-1">
-            {isPremium && <Crown className="h-3 w-3" />}
-            {subscription.tier.name} Member
-          </Badge>
-          {!isPremium && (
-            <Button 
-              variant="link" 
-              size="sm" 
-              onClick={() => navigate('/subscription')}
-              className="h-auto p-0 text-primary"
-            >
-              Upgrade for faster service
-            </Button>
-          )}
-        </div>
-      </section>
+  return (
+    <div className="container max-w-4xl mx-auto space-y-6">
+      {/* Emergency Button - Always Available */}
+      <EmergencyButton />
+      
+      {/* Hero Section */}
+      <ServicesHero />
       
       {/* Surge Pricing Banner */}
       <SurgePricingBanner multiplier={surge.multiplier} reason={surge.reason} />
       
-      {/* Current Service Status */}
-      {currentRequest && <section className="p-4 rounded-lg bg-primary/10 border border-primary/20">
-          <div className="flex items-center justify-between">
+      {/* Quick Stats Dashboard */}
+      <div className="grid grid-cols-2 gap-4">
+        <Card className="p-4 text-center">
+          <div className="flex items-center justify-center gap-2 mb-2">
+            <Star className="h-5 w-5 text-yellow-500" />
+            <span className="font-bold text-lg">{customer?.rating || 4.8}</span>
+          </div>
+          <p className="text-sm text-muted-foreground">Your Rating</p>
+        </Card>
+        
+        <Card className="p-4 text-center">
+          <div className="flex items-center justify-center gap-2 mb-2">
+            <Clock className="h-5 w-5 text-primary" />
+            <span className="font-bold text-lg">{requestHistory.length}</span>
+          </div>
+          <p className="text-sm text-muted-foreground">Services Used</p>
+        </Card>
+      </div>
+
+      {/* Active Request */}
+      {currentRequest && (
+        <Card className="p-4 border-l-4 border-l-primary">
+          <div className="flex justify-between items-start mb-3">
             <div>
-              <h3 className="font-bold text-primary">Service in Progress</h3>
+              <h3 className="font-bold">Active Request</h3>
               <p className="text-sm text-muted-foreground">
-                {currentRequest.serviceType} - {currentRequest.status}
+                {currentRequest.serviceType.charAt(0).toUpperCase() + currentRequest.serviceType.slice(1)} Service
               </p>
             </div>
-            <Button variant="outline" size="sm">
-              Track Driver
+            <Badge variant="secondary">{currentRequest.status}</Badge>
+          </div>
+          
+          <div className="flex items-center gap-2 mb-3">
+            <MapPin className="h-4 w-4 text-muted-foreground" />
+            <span className="text-sm">{currentRequest.customerLocation.address || "Your Location"}</span>
+          </div>
+          
+          <Button 
+            onClick={() => navigate(`/job/${currentRequest.id}`)}
+            className="w-full"
+          >
+            View Details
+          </Button>
+        </Card>
+      )}
+
+      {/* New Enhanced Features Grid */}
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+        <FamilyTracker />
+        <VehicleHealthCard />
+      </div>
+
+      {/* Community Feed */}
+      <CommunityFeed />
+
+      {/* Map */}
+      <Card className="p-4">
+        <h3 className="font-bold mb-3">Your Location</h3>
+        <MapView height="h-[200px]" />
+        {currentLocation && (
+          <p className="text-sm text-muted-foreground mt-2">
+            📍 {currentLocation.lat.toFixed(4)}, {currentLocation.lng.toFixed(4)}
+          </p>
+        )}
+      </Card>
+
+      {/* Services Header */}
+      <ServicesHeader />
+      
+      {/* Services Grid */}
+      <ServicesGrid />
+
+      {/* Recent Activity */}
+      {requestHistory.length > 0 && (
+        <Card className="p-4">
+          <h3 className="font-bold mb-4 flex items-center gap-2">
+            <Clock className="h-5 w-5" />
+            Recent Activity
+          </h3>
+          <div className="space-y-3">
+            {requestHistory.slice(-3).reverse().map((request) => (
+              <div key={request.id} className="flex justify-between items-center p-3 bg-secondary/30 rounded-md">
+                <div>
+                  <p className="font-medium capitalize">
+                    {request.serviceType.replace('_', ' ')} Service
+                  </p>
+                  <p className="text-sm text-muted-foreground">
+                    {new Date(request.createdAt).toLocaleDateString()}
+                  </p>
+                </div>
+                <div className="text-right">
+                  <Badge 
+                    variant={request.status === 'completed' ? 'default' : 'secondary'}
+                  >
+                    {request.status}
+                  </Badge>
+                  <p className="text-sm font-medium mt-1">${request.price}</p>
+                </div>
+              </div>
+            ))}
+          </div>
+          <Button 
+            variant="outline" 
+            className="w-full mt-4"
+            onClick={() => navigate('/profile')}
+          >
+            View All History
+          </Button>
+        </Card>
+      )}
+
+      {/* Upgrade Prompt for Basic Users */}
+      {subscription.tier.id === 'basic' && (
+        <Card className="p-4 bg-gradient-to-r from-orange-50 to-orange-100 border-orange-200">
+          <div className="flex items-center gap-3">
+            <div className="h-12 w-12 bg-orange-500 rounded-full flex items-center justify-center">
+              <AlertTriangle className="h-6 w-6 text-white" />
+            </div>
+            <div className="flex-1">
+              <h3 className="font-bold">Upgrade to Premium</h3>
+              <p className="text-sm text-muted-foreground">
+                Get priority response, reduced surge pricing, and more!
+              </p>
+            </div>
+            <Button onClick={() => navigate('/subscription')}>
+              Upgrade
             </Button>
           </div>
-        </section>}
-      
-      {/* Map Section */}
-      <section>
-        <div className="relative">
-          <MapView height="h-[200px]" />
-          <Badge className="absolute top-3 left-3 bg-white text-foreground">
-            📍 Your Location
-          </Badge>
-          {currentLocation && <div className="absolute bottom-3 left-3 right-3 bg-background/90 backdrop-blur-sm p-2 rounded-lg border">
-              <p className="text-xs text-muted-foreground">
-                Current location: {currentLocation.lat.toFixed(4)}, {currentLocation.lng.toFixed(4)}
-              </p>
-            </div>}
-        </div>
-      </section>
-      
-      {/* Quick Actions */}
-      <section>
-        <div className="grid grid-cols-2 gap-3">
-          <Button className="app-button h-auto py-4 flex-col" variant="outline">
-            <Shield className="h-6 w-6 mb-1" />
-            <span className="text-sm">Safety Center</span>
-          </Button>
-          <Button className="app-button h-auto py-4 flex-col bg-red-600 hover:bg-red-700 text-white">
-            <Phone className="h-6 w-6 mb-1" />
-            <span className="text-sm">Emergency SOS</span>
-          </Button>
-        </div>
-      </section>
-      
-      {/* Services Section */}
-      <section>
-        <h2 className="text-lg font-bold mb-3 text-center">What Can We Help With?</h2>
-        <div className="grid gap-4 grid-cols-1 md:grid-cols-2 lg:grid-cols-3">
-          <ServiceCard 
-            type="battery" 
-            title="Battery Jump" 
-            price={calculateSurgePrice(49, isPremium)} 
-            description="Dead battery? We'll get you back on the road fast." 
-          />
-          <ServiceCard 
-            type="tire" 
-            title="Tire Change" 
-            price={calculateSurgePrice(69, isPremium)} 
-            description="Flat tire? We'll swap it with your spare quickly." 
-          />
-          <ServiceCard 
-            type="fuel" 
-            title="Fuel Delivery" 
-            price={calculateSurgePrice(45, isPremium)} 
-            description="Out of gas? We'll bring fuel right to you." 
-          />
-          <ServiceCard 
-            type="lockout" 
-            title="Lockout Service" 
-            price={calculateSurgePrice(75, isPremium)} 
-            description="Locked out? We'll help you get back in safely." 
-          />
-          <ServiceCard 
-            type="tow" 
-            title="Towing Service" 
-            price={calculateSurgePrice(99, isPremium)} 
-            description="Need a tow? We'll get your vehicle to safety." 
-          />
-          <ServiceCard 
-            type="charging" 
-            title="EV Charging" 
-            price={calculateSurgePrice(59, isPremium)} 
-            description="Electric vehicle out of power? Mobile charging available." 
-          />
-        </div>
-      </section>
-    </div>;
+        </Card>
+      )}
+    </div>
+  );
 };
 
 export default CustomerHome;

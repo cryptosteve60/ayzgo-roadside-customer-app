@@ -5,29 +5,43 @@ import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import { ServiceType, ServiceRequest, useApp } from "@/contexts/AppContext";
 import { useToast } from "@/hooks/use-toast";
-import { MapPin, Camera, Car } from "lucide-react";
+import { MapPin, Camera, Car, Users, Shield } from "lucide-react";
 import { useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
+import { useSurgePricing } from "@/hooks/useSurgePricing";
+import { useSubscription } from "@/hooks/useSubscription";
+import { useFamilyTracking } from "@/hooks/useFamilyTracking";
+import SurgePricingBanner from "@/components/SurgePricingBanner";
+import { Card } from "@/components/ui/card";
+import { Switch } from "@/components/ui/switch";
 
 export default function RequestService() {
   const { serviceType } = useParams<{ serviceType: ServiceType }>();
   const { customer, currentLocation, setCurrentRequest } = useApp();
   const { toast } = useToast();
   const navigate = useNavigate();
+  const { surge, calculateSurgePrice } = useSurgePricing();
+  const { subscription } = useSubscription();
+  const { notifyFamily, shareLocation, setShareLocation } = useFamilyTracking();
   
   const [location, setLocation] = useState("");
   const [vehicleDetails, setVehicleDetails] = useState("");
   const [description, setDescription] = useState("");
   const [estimatedPrice, setEstimatedPrice] = useState(0);
+  const [basePrice, setBasePrice] = useState(0);
+  const [autoNotifyFamily, setAutoNotifyFamily] = useState(true);
   
   useEffect(() => {
     if (currentLocation) {
       setLocation(`${currentLocation.lat.toFixed(4)}, ${currentLocation.lng.toFixed(4)}`);
     }
     if (serviceType) {
-      setEstimatedPrice(getServicePrice(serviceType));
+      const price = getServicePrice(serviceType);
+      setBasePrice(price);
+      const surgePrice = calculateSurgePrice(price, subscription.tier.id !== 'basic');
+      setEstimatedPrice(surgePrice);
     }
-  }, [currentLocation, serviceType]);
+  }, [currentLocation, serviceType, surge, subscription]);
   
   if (!serviceType) {
     return <div>Invalid service type</div>;
@@ -88,14 +102,19 @@ export default function RequestService() {
     
     setCurrentRequest(newServiceRequest);
     
+    // Notify family if enabled
+    if (autoNotifyFamily) {
+      notifyFamily(`${customer.name} has requested ${getServiceTitle(serviceType)} at ${location}`);
+    }
+    
     toast({
       title: "Service Request Submitted! 🚗",
       description: "We're finding the best driver for you."
     });
     
-    // Navigate to searching screen
-    navigate('/searching', { 
-      state: { serviceRequest: newServiceRequest } 
+    // Navigate to confirmation screen
+    navigate('/request-confirmation', { 
+      state: { job: newServiceRequest } 
     });
   };
   
@@ -107,16 +126,58 @@ export default function RequestService() {
         <p className="text-muted-foreground">Help is on the way! Please provide details about your situation.</p>
       </div>
 
+      {/* Surge Pricing Banner */}
+      <SurgePricingBanner multiplier={surge.multiplier} reason={surge.reason} />
+
       {/* Price Estimate */}
       <div className="mb-6 p-4 rounded-lg bg-primary/10 border border-primary/20">
         <div className="flex justify-between items-center">
           <div>
             <h3 className="font-bold">Estimated Cost</h3>
-            <p className="text-sm text-muted-foreground">Final price may vary based on your specific needs</p>
+            <p className="text-sm text-muted-foreground">
+              {surge.multiplier > 1 && (
+                <>Base: ${basePrice} • Surge: {surge.multiplier}x</>
+              )}
+              {subscription.tier.id !== 'basic' && surge.multiplier > 1 && (
+                <span className="text-green-600"> • Premium discount applied</span>
+              )}
+            </p>
           </div>
           <div className="text-2xl font-bold text-primary">${estimatedPrice}</div>
         </div>
       </div>
+
+      {/* Safety Features */}
+      <Card className="p-4 mb-6">
+        <div className="flex items-center gap-2 mb-3">
+          <Shield className="h-5 w-5 text-green-500" />
+          <h3 className="font-bold">Safety Features</h3>
+        </div>
+        
+        <div className="space-y-3">
+          <div className="flex items-center justify-between">
+            <div>
+              <p className="font-medium">Share location with family</p>
+              <p className="text-sm text-muted-foreground">Let your family track your service</p>
+            </div>
+            <Switch
+              checked={shareLocation}
+              onCheckedChange={setShareLocation}
+            />
+          </div>
+          
+          <div className="flex items-center justify-between">
+            <div>
+              <p className="font-medium">Auto-notify family</p>
+              <p className="text-sm text-muted-foreground">Send automatic updates to emergency contacts</p>
+            </div>
+            <Switch
+              checked={autoNotifyFamily}
+              onCheckedChange={setAutoNotifyFamily}
+            />
+          </div>
+        </div>
+      </Card>
       
       <div className="grid gap-6">
         {/* Location */}
@@ -185,7 +246,7 @@ export default function RequestService() {
         {/* Terms */}
         <p className="text-xs text-muted-foreground text-center">
           By requesting service, you agree to our Terms of Service and Privacy Policy. 
-          Standard rates apply, final price confirmed by driver.
+          Your family will be notified if auto-notify is enabled.
         </p>
       </div>
     </div>
