@@ -77,7 +77,7 @@ const ServiceRequestOverlay: React.FC = () => {
   };
   if (!isOpen) {
     return <div className="fixed bottom-24 left-1/2 transform -translate-x-1/2 z-40">
-        <Button className="h-14 px-8 rounded-full bg-primary hover:bg-primary/90 shadow-lg text-lg font-semibold" onClick={() => setIsOpen(true)}>AYZGO!</Button>
+        <Button className="h-14 px-8 rounded-full bg-primary hover:bg-primary/90 shadow-lg text-lg font-semibold" onClick={() => setIsOpen(true)}>Request</Button>
       </div>;
   }
   return <div className="fixed bottom-0 left-0 right-0 z-50">
