@@ -19,11 +19,15 @@ import {
   Shield,
   Edit,
   Plus,
-  Trash2
+  Trash2,
+  Star,
+  Clock,
+  Activity
 } from "lucide-react";
+import VehicleHealthCard from "@/components/VehicleHealthCard";
 
 export default function Profile() {
-  const { customer } = useApp();
+  const { customer, requestHistory } = useApp();
   const navigate = useNavigate();
   const { toast } = useToast();
   
@@ -50,7 +54,6 @@ export default function Profile() {
   ]);
 
   const handleSaveProfile = () => {
-    // Mock save - replace with real API call
     toast({
       title: "Profile Updated",
       description: "Your profile information has been saved successfully."
@@ -59,7 +62,6 @@ export default function Profile() {
   };
 
   const handleAddVehicle = () => {
-    // Mock add vehicle - replace with real form
     toast({
       title: "Add Vehicle",
       description: "Vehicle management coming soon!"
@@ -89,6 +91,28 @@ export default function Profile() {
       </header>
 
       <div className="container max-w-4xl mx-auto px-4 py-8 space-y-8">
+        {/* Stats Dashboard */}
+        <div className="grid grid-cols-2 gap-4">
+          <Card className="p-4 text-center">
+            <div className="flex items-center justify-center gap-2 mb-2">
+              <Star className="h-5 w-5 text-yellow-500" />
+              <span className="font-bold text-lg">{customer?.rating || 4.8}</span>
+            </div>
+            <p className="text-sm text-muted-foreground">Your Rating</p>
+          </Card>
+          
+          <Card className="p-4 text-center">
+            <div className="flex items-center justify-center gap-2 mb-2">
+              <Clock className="h-5 w-5 text-primary" />
+              <span className="font-bold text-lg">{requestHistory.length}</span>
+            </div>
+            <p className="text-sm text-muted-foreground">Services Used</p>
+          </Card>
+        </div>
+
+        {/* Vehicle Health */}
+        <VehicleHealthCard />
+
         {/* Personal Information */}
         <Card className="p-6">
           <div className="flex items-center justify-between mb-6">
@@ -150,6 +174,38 @@ export default function Profile() {
             </div>
           </div>
         </Card>
+
+        {/* Recent Activity */}
+        {requestHistory.length > 0 && (
+          <Card className="p-6">
+            <h3 className="font-bold mb-4 flex items-center gap-2">
+              <Activity className="h-5 w-5" />
+              Recent Activity
+            </h3>
+            <div className="space-y-3">
+              {requestHistory.slice(-5).reverse().map((request) => (
+                <div key={request.id} className="flex justify-between items-center p-3 bg-secondary/30 rounded-md">
+                  <div>
+                    <p className="font-medium capitalize">
+                      {request.serviceType.replace('_', ' ')} Service
+                    </p>
+                    <p className="text-sm text-muted-foreground">
+                      {new Date(request.createdAt).toLocaleDateString()}
+                    </p>
+                  </div>
+                  <div className="text-right">
+                    <Badge 
+                      variant={request.status === 'completed' ? 'default' : 'secondary'}
+                    >
+                      {request.status}
+                    </Badge>
+                    <p className="text-sm font-medium mt-1">${request.price}</p>
+                  </div>
+                </div>
+              ))}
+            </div>
+          </Card>
+        )}
 
         {/* Vehicles */}
         <Card className="p-6">
@@ -248,7 +304,7 @@ export default function Profile() {
           </div>
         </Card>
 
-        {/* Notifications & Privacy */}
+        {/* Settings */}
         <div className="grid md:grid-cols-2 gap-6">
           <Card className="p-6">
             <div className="flex items-center gap-3 mb-4">

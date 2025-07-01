@@ -11,11 +11,8 @@ const Layout: React.FC<LayoutProps> = ({ children }) => {
   const location = useLocation();
   
   return (
-    <div 
-      className="min-h-screen bg-background flex flex-col bg-cover bg-center"
-      style={{ backgroundImage: "url('/placeholder.svg')" }}
-    >
-      {/* Header */}
+    <div className="min-h-screen bg-background flex flex-col">
+      {/* Minimal Header */}
       <header className="flex justify-between items-center p-4 border-b bg-primary text-primary-foreground">
         <div className="flex items-center gap-2">
           <div className="h-8 w-8 rounded-full bg-white flex items-center justify-center">
@@ -23,18 +20,15 @@ const Layout: React.FC<LayoutProps> = ({ children }) => {
           </div>
           <h1 className="text-lg font-bold">Ayzgo</h1>
         </div>
-        <div className="flex items-center gap-2">
-          <span className="text-sm text-primary-foreground/80">Roadside Assistance</span>
-        </div>
       </header>
 
       {/* Main Content */}
-      <main className="flex-1 p-4">
+      <main className="flex-1 relative">
         {children}
       </main>
       
       {/* Footer Navigation - Sticky */}
-      <nav className="border-t p-4 bg-background sticky bottom-0">
+      <nav className="border-t p-4 bg-background sticky bottom-0 z-50">
         <div className="flex justify-around items-center">
           <Link 
             to="/" 
