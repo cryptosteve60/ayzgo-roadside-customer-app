@@ -1,6 +1,7 @@
 
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
+import { Badge } from "@/components/ui/badge";
 import { ServiceType } from "@/contexts/AppContext";
 import { Battery, Car, Flag, Fuel, Lock, Plug } from "lucide-react";
 import { useNavigate } from "react-router-dom";
@@ -8,7 +9,7 @@ import { useNavigate } from "react-router-dom";
 interface ServiceCardProps {
   type: ServiceType;
   title: string;
-  price: string;
+  price: number;
   description: string;
 }
 
@@ -37,15 +38,21 @@ export default function ServiceCard({ type, title, price, description }: Service
   };
   
   return (
-    <Card className="app-card flex flex-col">
-      <div className="flex items-start justify-between mb-4">
+    <Card className="app-card flex flex-col relative">
+      {price > 60 && (
+        <Badge className="absolute -top-2 -right-2 bg-orange-500">
+          Premium
+        </Badge>
+      )}
+      
+      <div className="flex items-center justify-between mb-4">
         <div className="p-2 bg-accent rounded-md">
           {getIcon()}
         </div>
-        <h3 className="font-bold text-lg mb-1">{title}</h3>
-        <span className="text-primary font-bold">{price}</span>
+        <span className="text-primary font-bold text-lg">${price}</span>
       </div>
       
+      <h3 className="font-bold text-lg mb-2">{title}</h3>
       <p className="text-muted-foreground text-sm mb-4 flex-grow">{description}</p>
       
       <Button 

@@ -63,6 +63,19 @@ const Layout: React.FC<LayoutProps> = ({ children }) => {
             <span className="text-xs">Services</span>
           </Link>
           <Link 
+            to="/subscription" 
+            className={`flex flex-col items-center gap-1 ${
+              location.pathname === "/subscription" ? "text-primary" : "text-muted-foreground"
+            }`}
+          >
+            <div className={`h-6 w-6 rounded-full flex items-center justify-center ${
+              location.pathname === "/subscription" ? "bg-primary text-white" : "bg-secondary text-secondary-foreground"
+            }`}>
+              <span className="text-xs">P</span>
+            </div>
+            <span className="text-xs">Premium</span>
+          </Link>
+          <Link 
             to="/profile" 
             className={`flex flex-col items-center gap-1 ${
               location.pathname === "/profile" ? "text-primary" : "text-muted-foreground"
@@ -71,7 +84,7 @@ const Layout: React.FC<LayoutProps> = ({ children }) => {
             <div className={`h-6 w-6 rounded-full flex items-center justify-center ${
               location.pathname === "/profile" ? "bg-primary text-white" : "bg-secondary text-secondary-foreground"
             }`}>
-              <span className="text-xs">P</span>
+              <span className="text-xs">U</span>
             </div>
             <span className="text-xs">Profile</span>
           </Link>
