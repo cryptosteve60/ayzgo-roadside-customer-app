@@ -16,7 +16,7 @@ const SupportOverlay: React.FC = () => {
 
   if (!isOpen) {
     return (
-      <div className="fixed top-44 right-4 z-40">
+      <div className="fixed top-56 right-4 z-40">
         <Button
           className="h-12 w-12 rounded-full bg-purple-500 hover:bg-purple-600 shadow-lg"
           onClick={() => setIsOpen(true)}
@@ -28,7 +28,7 @@ const SupportOverlay: React.FC = () => {
   }
 
   return (
-    <div className="fixed top-44 right-4 z-40">
+    <div className="fixed top-56 right-4 z-40">
       <Card className="p-4 w-72 h-80 shadow-lg flex flex-col">
         <div className="flex items-center justify-between mb-4">
           <div className="flex items-center gap-2">

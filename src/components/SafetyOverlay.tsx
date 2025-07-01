@@ -14,7 +14,7 @@ const SafetyOverlay: React.FC = () => {
 
   if (!isOpen) {
     return (
-      <div className="fixed top-20 right-4 z-40">
+      <div className="fixed top-24 right-4 z-40">
         <Button
           className="h-12 w-12 rounded-full bg-blue-500 hover:bg-blue-600 shadow-lg"
           onClick={() => setIsOpen(true)}
@@ -26,7 +26,7 @@ const SafetyOverlay: React.FC = () => {
   }
 
   return (
-    <div className="fixed top-20 right-4 z-40">
+    <div className="fixed top-24 right-4 z-40">
       <Card className="p-4 w-64 shadow-lg">
         <div className="flex items-center justify-between mb-4">
           <div className="flex items-center gap-2">
