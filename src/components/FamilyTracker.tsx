@@ -56,7 +56,6 @@ const FamilyTracker: React.FC = () => {
                 <Switch
                   checked={member.isTracking}
                   onCheckedChange={() => toggleTracking(member.id)}
-                  size="sm"
                 />
               </div>
             </div>

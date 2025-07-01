@@ -11,6 +11,15 @@ interface EmergencyEvent {
   autoTriggered: boolean;
 }
 
+// Extend the DeviceMotionEvent interface for iOS compatibility
+interface IOSDeviceMotionEvent extends DeviceMotionEvent {
+  requestPermission?: () => Promise<'granted' | 'denied'>;
+}
+
+interface IOSDeviceMotionEventConstructor {
+  requestPermission?: () => Promise<'granted' | 'denied'>;
+}
+
 export const useEmergencyDetection = () => {
   const { currentLocation, customer } = useApp();
   const [isMonitoring, setIsMonitoring] = useState(false);
@@ -39,11 +48,17 @@ export const useEmergencyDetection = () => {
 
   // Start emergency monitoring
   const startMonitoring = useCallback(() => {
-    if (typeof DeviceMotionEvent !== 'undefined' && DeviceMotionEvent.requestPermission) {
-      DeviceMotionEvent.requestPermission().then(permission => {
+    // Check if we're on iOS and if permission is needed
+    const DeviceMotionEventAny = DeviceMotionEvent as unknown as IOSDeviceMotionEventConstructor;
+    
+    if (DeviceMotionEventAny.requestPermission) {
+      DeviceMotionEventAny.requestPermission().then(permission => {
         if (permission === 'granted') {
           setIsMonitoring(true);
         }
+      }).catch(() => {
+        // Fallback if permission request fails
+        setIsMonitoring(true);
       });
     } else {
       setIsMonitoring(true);
