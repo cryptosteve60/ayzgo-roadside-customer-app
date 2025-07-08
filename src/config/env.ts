@@ -15,6 +15,7 @@ export const checkRequiredEnvVars = () => {
   
   if (missing.length > 0) {
     console.warn('Missing required environment variables:', missing.join(', '));
+    console.warn('Using fallback API key for Google Maps');
   }
   
   return missing.length === 0;
