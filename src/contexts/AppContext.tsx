@@ -49,6 +49,7 @@ export interface ServiceRequest {
   };
   estimatedArrival?: Date;
   price?: number;
+  rating?: number;
   safetyPin?: string;
   acceptedBy?: string;
   acceptedAt?: Date;
@@ -118,7 +119,57 @@ export const AppProvider: React.FC<{ children: ReactNode }> = ({ children }) => 
   });
   
   const [currentRequest, setCurrentRequest] = useState<ServiceRequest | null>(null);
-  const [requestHistory, setRequestHistory] = useState<ServiceRequest[]>([]);
+  const [requestHistory, setRequestHistory] = useState<ServiceRequest[]>([
+    {
+      id: "req-1",
+      customerId: "customer-123",
+      customerName: "John Doe",
+      customerLocation: {
+        lat: 34.0522,
+        lng: -118.2437,
+        address: "123 Main St, Los Angeles, CA"
+      },
+      serviceType: "battery",
+      description: "Dead battery, need jump start",
+      status: "completed",
+      createdAt: new Date(Date.now() - 86400000), // 1 day ago
+      price: 45,
+      rating: 5,
+      driverName: "Mike Johnson"
+    },
+    {
+      id: "req-2",
+      customerId: "customer-123",
+      customerName: "John Doe",
+      customerLocation: {
+        lat: 34.0522,
+        lng: -118.2437,
+        address: "456 Oak Ave, Beverly Hills, CA"
+      },
+      serviceType: "tire",
+      description: "Flat tire replacement",
+      status: "completed",
+      createdAt: new Date(Date.now() - 172800000), // 2 days ago
+      price: 75,
+      rating: 4,
+      driverName: "Sarah Wilson"
+    },
+    {
+      id: "req-3",
+      customerId: "customer-123",
+      customerName: "John Doe",
+      customerLocation: {
+        lat: 34.0522,
+        lng: -118.2437,
+        address: "789 Pine St, Santa Monica, CA"
+      },
+      serviceType: "fuel",
+      description: "Out of gas",
+      status: "cancelled",
+      createdAt: new Date(Date.now() - 259200000), // 3 days ago
+      price: 25
+    }
+  ]);
   const [currentLocation, setCurrentLocation] = useState<{ lat: number; lng: number } | null>(null);
   const [locationError, setLocationError] = useState<string | null>(null);
   const [isLocationLoading, setIsLocationLoading] = useState(true);

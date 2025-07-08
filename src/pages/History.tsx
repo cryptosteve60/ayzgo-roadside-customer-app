@@ -26,7 +26,7 @@ export default function History() {
 
   const filteredHistory = requestHistory.filter((request) => {
     const matchesSearch = request.serviceType.toLowerCase().includes(searchQuery.toLowerCase()) ||
-                         request.location?.toLowerCase().includes(searchQuery.toLowerCase());
+                         request.customerLocation.address?.toLowerCase().includes(searchQuery.toLowerCase());
     const matchesFilter = filterStatus === "all" || request.status === filterStatus;
     return matchesSearch && matchesFilter;
   });
@@ -48,7 +48,7 @@ export default function History() {
 
   const totalSpent = requestHistory
     .filter(r => r.status === 'completed')
-    .reduce((sum, r) => sum + r.price, 0);
+    .reduce((sum, r) => sum + (r.price || 0), 0);
 
   const totalServices = requestHistory.filter(r => r.status === 'completed').length;
 
@@ -82,7 +82,7 @@ export default function History() {
           </Card>
           <Card className="p-6 text-center">
             <div className="text-3xl font-bold text-primary mb-2">
-              {requestHistory.length > 0 ? (totalSpent / totalServices).toFixed(0) : 0}
+              {requestHistory.length > 0 && totalServices > 0 ? (totalSpent / totalServices).toFixed(0) : 0}
             </div>
             <p className="text-muted-foreground">Avg. Service Cost</p>
           </Card>
@@ -164,19 +164,19 @@ export default function History() {
                         <Calendar className="h-4 w-4" />
                         <span>{new Date(request.createdAt).toLocaleDateString()}</span>
                       </div>
-                      {request.location && (
+                      {request.customerLocation.address && (
                         <div className="flex items-center gap-2">
                           <MapPin className="h-4 w-4" />
-                          <span>{request.location}</span>
+                          <span>{request.customerLocation.address}</span>
                         </div>
                       )}
                       <div className="flex items-center gap-2">
                         <Receipt className="h-4 w-4" />
-                        <span className="font-semibold text-primary">${request.price}</span>
+                        <span className="font-semibold text-primary">${request.price || 0}</span>
                       </div>
                     </div>
 
-                    {request.status === 'completed' && (
+                    {request.status === 'completed' && request.rating && (
                       <div className="flex items-center gap-2 mb-4">
                         <div className="flex items-center">
                           {[1, 2, 3, 4, 5].map((star) => (
