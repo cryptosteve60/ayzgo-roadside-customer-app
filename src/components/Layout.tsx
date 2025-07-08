@@ -1,7 +1,7 @@
 
 import React from "react";
 import { Link, useLocation } from "react-router-dom";
-import { Truck } from "lucide-react";
+import { Truck, Home, Wrench, ShoppingBag, User, History, Gift } from "lucide-react";
 
 interface LayoutProps {
   children: React.ReactNode;
@@ -28,58 +28,60 @@ const Layout: React.FC<LayoutProps> = ({ children }) => {
       </main>
       
       {/* Footer Navigation - Sticky at bottom */}
-      <nav className="border-t p-4 bg-background sticky bottom-0 z-50">
+      <nav className="border-t p-2 bg-background sticky bottom-0 z-50">
         <div className="flex justify-around items-center">
           <Link 
             to="/" 
-            className={`flex flex-col items-center gap-1 ${
-              location.pathname === "/" ? "text-primary" : "text-muted-foreground"
+            className={`flex flex-col items-center gap-1 p-2 rounded-lg transition-colors ${
+              location.pathname === "/" ? "text-primary bg-primary/10" : "text-muted-foreground hover:text-foreground"
             }`}
           >
-            <div className={`h-6 w-6 rounded-full flex items-center justify-center ${
-              location.pathname === "/" ? "bg-primary text-white" : "bg-secondary text-secondary-foreground"
-            }`}>
-              <span className="text-xs">H</span>
-            </div>
+            <Home className="h-5 w-5" />
             <span className="text-xs">Home</span>
           </Link>
           <Link 
             to="/services" 
-            className={`flex flex-col items-center gap-1 ${
-              location.pathname === "/services" ? "text-primary" : "text-muted-foreground"
+            className={`flex flex-col items-center gap-1 p-2 rounded-lg transition-colors ${
+              location.pathname === "/services" ? "text-primary bg-primary/10" : "text-muted-foreground hover:text-foreground"
             }`}
           >
-            <div className={`h-6 w-6 rounded-full flex items-center justify-center ${
-              location.pathname === "/services" ? "bg-primary text-white" : "bg-secondary text-secondary-foreground"
-            }`}>
-              <span className="text-xs">S</span>
-            </div>
+            <Wrench className="h-5 w-5" />
             <span className="text-xs">Services</span>
           </Link>
           <Link 
-            to="/subscription" 
-            className={`flex flex-col items-center gap-1 ${
-              location.pathname === "/subscription" ? "text-primary" : "text-muted-foreground"
+            to="/products" 
+            className={`flex flex-col items-center gap-1 p-2 rounded-lg transition-colors ${
+              location.pathname === "/products" ? "text-primary bg-primary/10" : "text-muted-foreground hover:text-foreground"
             }`}
           >
-            <div className={`h-6 w-6 rounded-full flex items-center justify-center ${
-              location.pathname === "/subscription" ? "bg-primary text-white" : "bg-secondary text-secondary-foreground"
-            }`}>
-              <span className="text-xs">P</span>
-            </div>
-            <span className="text-xs">Premium</span>
+            <ShoppingBag className="h-5 w-5" />
+            <span className="text-xs">Products</span>
+          </Link>
+          <Link 
+            to="/history" 
+            className={`flex flex-col items-center gap-1 p-2 rounded-lg transition-colors ${
+              location.pathname === "/history" ? "text-primary bg-primary/10" : "text-muted-foreground hover:text-foreground"
+            }`}
+          >
+            <History className="h-5 w-5" />
+            <span className="text-xs">History</span>
+          </Link>
+          <Link 
+            to="/rewards" 
+            className={`flex flex-col items-center gap-1 p-2 rounded-lg transition-colors ${
+              location.pathname === "/rewards" ? "text-primary bg-primary/10" : "text-muted-foreground hover:text-foreground"
+            }`}
+          >
+            <Gift className="h-5 w-5" />
+            <span className="text-xs">Rewards</span>
           </Link>
           <Link 
             to="/profile" 
-            className={`flex flex-col items-center gap-1 ${
-              location.pathname === "/profile" ? "text-primary" : "text-muted-foreground"
+            className={`flex flex-col items-center gap-1 p-2 rounded-lg transition-colors ${
+              location.pathname === "/profile" ? "text-primary bg-primary/10" : "text-muted-foreground hover:text-foreground"
             }`}
           >
-            <div className={`h-6 w-6 rounded-full flex items-center justify-center ${
-              location.pathname === "/profile" ? "bg-primary text-white" : "bg-secondary text-secondary-foreground"
-            }`}>
-              <span className="text-xs">U</span>
-            </div>
+            <User className="h-5 w-5" />
             <span className="text-xs">Profile</span>
           </Link>
         </div>

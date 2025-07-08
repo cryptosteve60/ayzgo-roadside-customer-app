@@ -1,11 +1,10 @@
-
 import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Card } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
-import { Separator } from "@/components/ui/separator";
+import { Avatar, AvatarImage, AvatarFallback } from "@/components/ui/avatar";
 import { useNavigate } from "react-router-dom";
 import { useApp } from "@/contexts/AppContext";
 import { useToast } from "@/hooks/use-toast";
@@ -26,7 +25,12 @@ import {
   Clock,
   Activity,
   AlertTriangle,
-  CheckCircle
+  CheckCircle,
+  Camera,
+  FileText,
+  Wrench,
+  Calendar,
+  MapPin
 } from "lucide-react";
 
 export default function Profile() {
@@ -43,8 +47,32 @@ export default function Profile() {
   });
 
   const [vehicles, setVehicles] = useState([
-    { id: "1", year: "2020", make: "Honda", model: "Civic", color: "Blue", license: "ABC123" },
-    { id: "2", year: "2018", make: "Toyota", model: "Camry", color: "Silver", license: "XYZ789" }
+    { 
+      id: "1", 
+      year: "2020", 
+      make: "Honda", 
+      model: "Civic", 
+      color: "Blue", 
+      license: "ABC123",
+      vin: "1HGBH41JXMN109186",
+      mileage: 45000,
+      photos: [],
+      insurance: "State Farm",
+      registrationExpiry: "2025-03-15"
+    },
+    { 
+      id: "2", 
+      year: "2018", 
+      make: "Toyota", 
+      model: "Camry", 
+      color: "Silver", 
+      license: "XYZ789",
+      vin: "4T1BF1FK5GU260429",
+      mileage: 62000,
+      photos: [],
+      insurance: "Geico",
+      registrationExpiry: "2024-11-20"
+    }
   ]);
 
   const [emergencyContacts, setEmergencyContacts] = useState([
@@ -79,8 +107,12 @@ export default function Profile() {
     setVehicles(vehicles.filter(v => v.id !== vehicleId));
     toast({
       title: "Vehicle Removed",
-      description: "Vehicle has been removed from your profile."
+      description: "Vehicle has been removed from your garage."
     });
+  };
+
+  const getInitials = (name: string) => {
+    return name.split(' ').map(n => n[0]).join('').toUpperCase();
   };
 
   return (
@@ -117,7 +149,7 @@ export default function Profile() {
           </Card>
         </div>
 
-        {/* Personal Information */}
+        {/* Personal Information with Profile Picture */}
         <Card className="p-6">
           <div className="flex items-center justify-between mb-6">
             <div className="flex items-center gap-3">
@@ -132,6 +164,35 @@ export default function Profile() {
               <Edit className="h-4 w-4 mr-2" />
               {isEditing ? "Save Changes" : "Edit Profile"}
             </Button>
+          </div>
+
+          {/* Profile Picture Section */}
+          <div className="flex items-center gap-6 mb-6 pb-6 border-b">
+            <div className="relative">
+              <Avatar className="h-20 w-20">
+                <AvatarImage src="" alt={formData.name} />
+                <AvatarFallback className="text-lg">
+                  {getInitials(formData.name || "User")}
+                </AvatarFallback>
+              </Avatar>
+              <Button
+                size="sm"
+                variant="outline"
+                className="absolute -bottom-2 -right-2 h-8 w-8 rounded-full p-0"
+                disabled={!isEditing}
+              >
+                <Camera className="h-4 w-4" />
+              </Button>
+            </div>
+            <div>
+              <h3 className="text-lg font-semibold">{formData.name || "User"}</h3>
+              <p className="text-muted-foreground">Member since January 2024</p>
+              {isEditing && (
+                <Button variant="link" size="sm" className="p-0 h-auto">
+                  Change profile picture
+                </Button>
+              )}
+            </div>
           </div>
 
           <div className="grid md:grid-cols-2 gap-4">
@@ -172,10 +233,135 @@ export default function Profile() {
                 <Phone className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
               </div>
             </div>
-            <div>
-              <Label>Member Since</Label>
-              <div className="text-sm text-muted-foreground mt-2">January 2024</div>
+          </div>
+        </Card>
+
+        {/* My Garage (Enhanced) */}
+        <Card className="p-6">
+          <div className="flex items-center justify-between mb-6">
+            <div className="flex items-center gap-3">
+              <Car className="h-6 w-6 text-primary" />
+              <h2 className="text-xl font-semibold">My Garage</h2>
             </div>
+            <Button variant="outline" size="sm" onClick={handleAddVehicle}>
+              <Plus className="h-4 w-4 mr-2" />
+              Add Vehicle
+            </Button>
+          </div>
+
+          <div className="space-y-6">
+            {vehicles.map((vehicle) => {
+              const healthData = vehicleHealthData.find(v => v.make === vehicle.make && v.model === vehicle.model);
+              return (
+                <Card key={vehicle.id} className="p-6 border-2">
+                  <div className="flex items-start justify-between mb-4">
+                    <div className="flex gap-4">
+                      <div className="w-16 h-16 bg-secondary rounded-lg flex items-center justify-center">
+                        <Car className="h-8 w-8 text-muted-foreground" />
+                      </div>
+                      <div>
+                        <h3 className="text-lg font-semibold">{vehicle.year} {vehicle.make} {vehicle.model}</h3>
+                        <p className="text-muted-foreground">{vehicle.color} • {vehicle.license}</p>
+                        <div className="flex items-center gap-4 mt-2 text-sm text-muted-foreground">
+                          <span>{vehicle.mileage.toLocaleString()} miles</span>
+                          <span>VIN: {vehicle.vin.slice(-6)}</span>
+                        </div>
+                      </div>
+                    </div>
+                    <div className="flex items-center gap-2">
+                      {healthData && (
+                        <Badge variant={healthData.healthScore >= 80 ? "default" : "destructive"}>
+                          {healthData.healthScore}% Health
+                        </Badge>
+                      )}
+                      <Button
+                        variant="outline"
+                        size="sm"
+                        onClick={() => handleRemoveVehicle(vehicle.id)}
+                      >
+                        <Trash2 className="h-4 w-4" />
+                      </Button>
+                    </div>
+                  </div>
+
+                  {/* Vehicle Details Grid */}
+                  <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-4 p-4 bg-secondary/30 rounded-lg">
+                    <div>
+                      <p className="text-xs text-muted-foreground">Insurance</p>
+                      <p className="font-medium">{vehicle.insurance}</p>
+                    </div>
+                    <div>
+                      <p className="text-xs text-muted-foreground">Registration</p>
+                      <p className="font-medium">{new Date(vehicle.registrationExpiry).toLocaleDateString()}</p>
+                    </div>
+                    <div>
+                      <p className="text-xs text-muted-foreground">Full VIN</p>
+                      <p className="font-mono text-sm">{vehicle.vin}</p>
+                    </div>
+                    <div>
+                      <p className="text-xs text-muted-foreground">Photos</p>
+                      <Button variant="outline" size="sm" className="mt-1">
+                        <Camera className="h-3 w-3 mr-1" />
+                        Add
+                      </Button>
+                    </div>
+                  </div>
+
+                  {/* Vehicle Health Status */}
+                  {healthData && (
+                    <div className="space-y-3 pt-4 border-t">
+                      <div className="flex items-center gap-2 text-sm font-medium">
+                        <Activity className="h-4 w-4 text-primary" />
+                        Vehicle Health & Maintenance
+                      </div>
+                      
+                      {overdueItems.length > 0 && (
+                        <div className="space-y-2">
+                          <div className="flex items-center gap-1">
+                            <AlertTriangle className="h-4 w-4 text-red-500" />
+                            <span className="text-sm font-medium text-red-600">Overdue Maintenance</span>
+                          </div>
+                          {overdueItems.slice(0, 2).map(item => (
+                            <div key={item.id} className="text-xs bg-red-50 p-2 rounded border-l-2 border-red-500">
+                              {item.name} - ${item.cost}
+                            </div>
+                          ))}
+                        </div>
+                      )}
+
+                      {upcomingItems.length > 0 && (
+                        <div className="space-y-2">
+                          <div className="flex items-center gap-1">
+                            <Clock className="h-4 w-4 text-yellow-500" />
+                            <span className="text-sm font-medium text-yellow-600">Coming Up</span>
+                          </div>
+                          {upcomingItems.slice(0, 2).map(item => (
+                            <div key={item.id} className="text-xs bg-yellow-50 p-2 rounded border-l-2 border-yellow-500">
+                              {item.name} - ${item.cost}
+                            </div>
+                          ))}
+                        </div>
+                      )}
+
+                      <div className="flex gap-2 flex-wrap">
+                        <Button variant="outline" size="sm">
+                          <Calendar className="h-4 w-4 mr-2" />
+                          Schedule Service
+                        </Button>
+                        <Button variant="outline" size="sm">
+                          <MapPin className="h-4 w-4 mr-2" />
+                          Find Nearby
+                        </Button>
+                        <Button variant="outline" size="sm">
+                          <FileText className="h-4 w-4 mr-2" />
+                          Full Report
+                        </Button>
+                      </div>
+                    </div>
+                  )}
+                </Card>
+              );
+            })}
           </div>
         </Card>
 
@@ -209,93 +395,6 @@ export default function Profile() {
                 </Button>
               </div>
             ))}
-          </div>
-        </Card>
-
-        {/* My Vehicles with Health Integration */}
-        <Card className="p-6">
-          <div className="flex items-center justify-between mb-6">
-            <div className="flex items-center gap-3">
-              <Car className="h-6 w-6 text-primary" />
-              <h2 className="text-xl font-semibold">My Vehicles</h2>
-            </div>
-            <Button variant="outline" size="sm" onClick={handleAddVehicle}>
-              <Plus className="h-4 w-4 mr-2" />
-              Add Vehicle
-            </Button>
-          </div>
-
-          <div className="space-y-6">
-            {vehicles.map((vehicle) => {
-              const healthData = vehicleHealthData.find(v => v.make === vehicle.make && v.model === vehicle.model);
-              return (
-                <div key={vehicle.id} className="border rounded-lg p-4">
-                  <div className="flex items-center justify-between mb-4">
-                    <div>
-                      <h3 className="font-medium">{vehicle.year} {vehicle.make} {vehicle.model}</h3>
-                      <p className="text-sm text-muted-foreground">
-                        {vehicle.color} • License: {vehicle.license}
-                      </p>
-                    </div>
-                    <div className="flex items-center gap-2">
-                      {healthData && (
-                        <Badge variant={healthData.healthScore >= 80 ? "default" : "destructive"}>
-                          {healthData.healthScore}% Health
-                        </Badge>
-                      )}
-                      <Button
-                        variant="outline"
-                        size="sm"
-                        onClick={() => handleRemoveVehicle(vehicle.id)}
-                      >
-                        <Trash2 className="h-4 w-4" />
-                      </Button>
-                    </div>
-                  </div>
-
-                  {healthData && (
-                    <div className="space-y-3 mt-4 pt-4 border-t">
-                      <div className="flex items-center gap-2 text-sm font-medium">
-                        <Activity className="h-4 w-4 text-primary" />
-                        Vehicle Health Status
-                      </div>
-                      
-                      {overdueItems.length > 0 && (
-                        <div className="space-y-2">
-                          <div className="flex items-center gap-1">
-                            <AlertTriangle className="h-4 w-4 text-red-500" />
-                            <span className="text-sm font-medium text-red-600">Overdue Maintenance</span>
-                          </div>
-                          {overdueItems.slice(0, 2).map(item => (
-                            <div key={item.id} className="text-xs bg-red-50 p-2 rounded border-l-2 border-red-500">
-                              {item.name} - ${item.cost}
-                            </div>
-                          ))}
-                        </div>
-                      )}
-
-                      {upcomingItems.length > 0 && (
-                        <div className="space-y-2">
-                          <div className="flex items-center gap-1">
-                            <Clock className="h-4 w-4 text-yellow-500" />
-                            <span className="text-sm font-medium text-yellow-600">Coming Up</span>
-                          </div>
-                          {upcomingItems.slice(0, 2).map(item => (
-                            <div key={item.id} className="text-xs bg-yellow-50 p-2 rounded border-l-2 border-yellow-500">
-                              {item.name} - ${item.cost}
-                            </div>
-                          ))}
-                        </div>
-                      )}
-
-                      <Button variant="outline" size="sm" className="w-full">
-                        View Full Health Report
-                      </Button>
-                    </div>
-                  )}
-                </div>
-              );
-            })}
           </div>
         </Card>
 

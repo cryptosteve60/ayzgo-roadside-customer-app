@@ -1,3 +1,4 @@
+
 import { Toaster } from "@/components/ui/toaster";
 import { Toaster as Sonner } from "@/components/ui/sonner";
 import { TooltipProvider } from "@/components/ui/tooltip";
@@ -10,6 +11,9 @@ import RequestConfirmation from "./pages/RequestConfirmation";
 import JobDetails from "./pages/JobDetails";
 import Services from "./pages/Services";
 import Profile from "./pages/Profile";
+import Products from "./pages/Products";
+import History from "./pages/History";
+import Rewards from "./pages/Rewards";
 import Login from "./pages/Login";
 import Signup from "./pages/Signup";
 import NotFound from "./pages/NotFound";
@@ -29,6 +33,9 @@ const App = () => (
             <Route path="/login" element={<Login />} />
             <Route path="/signup" element={<Signup />} />
             <Route path="/services" element={<Services />} />
+            <Route path="/products" element={<Products />} />
+            <Route path="/history" element={<History />} />
+            <Route path="/rewards" element={<Rewards />} />
             <Route path="/profile" element={<Profile />} />
             <Route path="/subscription" element={<Subscription />} />
             <Route path="/request/:serviceType" element={<RequestService />} />
