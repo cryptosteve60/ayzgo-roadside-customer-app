@@ -5,15 +5,16 @@ import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import { ServiceType, ServiceRequest, useApp } from "@/contexts/AppContext";
 import { useToast } from "@/hooks/use-toast";
-import { MapPin, Camera, Car, Users, Shield } from "lucide-react";
+import { MapPin, Camera, Car, Shield, Zap, Clock } from "lucide-react";
 import { useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import { useSurgePricing } from "@/hooks/useSurgePricing";
-import { useSubscription } from "@/hooks/useSubscription";
+import { useServiceTiers } from "@/hooks/useSubscription";
 import { useFamilyTracking } from "@/hooks/useFamilyTracking";
 import SurgePricingBanner from "@/components/SurgePricingBanner";
 import { Card } from "@/components/ui/card";
 import { Switch } from "@/components/ui/switch";
+import { Badge } from "@/components/ui/badge";
 
 export default function RequestService() {
   const { serviceType } = useParams<{ serviceType: ServiceType }>();
@@ -21,14 +22,14 @@ export default function RequestService() {
   const { toast } = useToast();
   const navigate = useNavigate();
   const { surge, calculateSurgePrice } = useSurgePricing();
-  const { subscription } = useSubscription();
+  const { selectedTier, selectTier, tiers } = useServiceTiers();
   const { notifyFamily, shareLocation, setShareLocation } = useFamilyTracking();
   
   const [location, setLocation] = useState("");
   const [vehicleDetails, setVehicleDetails] = useState("");
   const [description, setDescription] = useState("");
-  const [estimatedPrice, setEstimatedPrice] = useState(0);
   const [basePrice, setBasePrice] = useState(0);
+  const [totalPrice, setTotalPrice] = useState(0);
   const [autoNotifyFamily, setAutoNotifyFamily] = useState(true);
   
   useEffect(() => {
@@ -38,10 +39,13 @@ export default function RequestService() {
     if (serviceType) {
       const price = getServicePrice(serviceType);
       setBasePrice(price);
-      const surgePrice = calculateSurgePrice(price, subscription.tier.id !== 'basic');
-      setEstimatedPrice(surgePrice);
+      
+      // Calculate total: base service + service tier fee + surge
+      const serviceWithFee = price + selectedTier.serviceFee;
+      const finalPrice = calculateSurgePrice(serviceWithFee, false); // No premium discount needed
+      setTotalPrice(finalPrice);
     }
-  }, [currentLocation, serviceType, surge, subscription]);
+  }, [currentLocation, serviceType, surge, selectedTier]);
   
   if (!serviceType) {
     return <div>Invalid service type</div>;
@@ -95,7 +99,7 @@ export default function RequestService() {
       description,
       vehicleDetails,
       status: "requested",
-      price: estimatedPrice,
+      price: totalPrice,
       createdAt: new Date(),
       safetyPin: Math.floor(1000 + Math.random() * 9000).toString()
     };
@@ -123,29 +127,76 @@ export default function RequestService() {
       {/* Header */}
       <div className="mb-6">
         <h1 className="text-2xl font-bold">Request {getServiceTitle(serviceType)}</h1>
-        <p className="text-muted-foreground">Help is on the way! Please provide details about your situation.</p>
+        <p className="text-muted-foreground">Help is on the way! Choose your service level and provide details.</p>
       </div>
+
+      {/* Service Level Selection */}
+      <Card className="p-4 mb-6">
+        <h3 className="font-bold mb-3 flex items-center gap-2">
+          <Zap className="h-5 w-5 text-primary" />
+          Choose Service Level
+        </h3>
+        <div className="grid grid-cols-1 gap-3">
+          {tiers.map((tier) => (
+            <div
+              key={tier.id}
+              className={`p-3 rounded-lg border cursor-pointer transition-all ${
+                selectedTier.id === tier.id
+                  ? 'border-primary bg-primary/5'
+                  : 'border-border hover:border-primary/50'
+              }`}
+              onClick={() => selectTier(tier.id)}
+            >
+              <div className="flex justify-between items-center">
+                <div>
+                  <div className="flex items-center gap-2">
+                    <span className="font-medium">{tier.name}</span>
+                    {tier.id === 'express' && (
+                      <Badge variant="secondary" className="bg-orange-100 text-orange-800">
+                        <Clock className="h-3 w-3 mr-1" />
+                        Popular
+                      </Badge>
+                    )}
+                  </div>
+                  <p className="text-sm text-muted-foreground">{tier.responseBoost} response</p>
+                </div>
+                <div className="text-right">
+                  <div className="font-bold">+${tier.serviceFee}</div>
+                  <div className="text-xs text-muted-foreground">service fee</div>
+                </div>
+              </div>
+            </div>
+          ))}
+        </div>
+      </Card>
 
       {/* Surge Pricing Banner */}
       <SurgePricingBanner multiplier={surge.multiplier} reason={surge.reason} />
 
-      {/* Price Estimate */}
-      <div className="mb-6 p-4 rounded-lg bg-primary/10 border border-primary/20">
-        <div className="flex justify-between items-center">
-          <div>
-            <h3 className="font-bold">Estimated Cost</h3>
-            <p className="text-sm text-muted-foreground">
-              {surge.multiplier > 1 && (
-                <>Base: ${basePrice} • Surge: {surge.multiplier}x</>
-              )}
-              {subscription.tier.id !== 'basic' && surge.multiplier > 1 && (
-                <span className="text-green-600"> • Premium discount applied</span>
-              )}
-            </p>
+      {/* Price Breakdown */}
+      <Card className="p-4 mb-6 bg-primary/5 border-primary/20">
+        <h3 className="font-bold mb-3">Price Breakdown</h3>
+        <div className="space-y-2 text-sm">
+          <div className="flex justify-between">
+            <span>{getServiceTitle(serviceType)} Service</span>
+            <span>${basePrice}</span>
           </div>
-          <div className="text-2xl font-bold text-primary">${estimatedPrice}</div>
+          <div className="flex justify-between">
+            <span>{selectedTier.name} Fee</span>
+            <span>+${selectedTier.serviceFee}</span>
+          </div>
+          {surge.multiplier > 1 && (
+            <div className="flex justify-between text-orange-600">
+              <span>High Demand Surge ({surge.multiplier}x)</span>
+              <span>+${(totalPrice - basePrice - selectedTier.serviceFee).toFixed(2)}</span>
+            </div>
+          )}
+          <div className="border-t pt-2 flex justify-between font-bold text-lg">
+            <span>Total Cost</span>
+            <span className="text-primary">${totalPrice}</span>
+          </div>
         </div>
-      </div>
+      </Card>
 
       {/* Safety Features */}
       <Card className="p-4 mb-6">
@@ -240,13 +291,13 @@ export default function RequestService() {
         
         {/* Submit Button */}
         <Button className="app-button mt-4" onClick={handleSubmitRequest}>
-          Request Help - ${estimatedPrice}
+          Request Help - ${totalPrice}
         </Button>
 
         {/* Terms */}
         <p className="text-xs text-muted-foreground text-center">
           By requesting service, you agree to our Terms of Service and Privacy Policy. 
-          Your family will be notified if auto-notify is enabled.
+          Payment processed only after service completion.
         </p>
       </div>
     </div>

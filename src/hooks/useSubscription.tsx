@@ -2,76 +2,62 @@
 import { useState, useEffect } from 'react';
 import { useApp } from '@/contexts/AppContext';
 
-export interface SubscriptionTier {
+export interface ServiceTier {
   id: string;
   name: string;
-  price: number;
+  description: string;
   features: string[];
-  priority: number;
+  serviceFee: number;
+  responseBoost: string;
 }
 
-export const SUBSCRIPTION_TIERS: SubscriptionTier[] = [
+export const SERVICE_TIERS: ServiceTier[] = [
   {
-    id: 'basic',
-    name: 'Basic',
-    price: 0,
-    features: ['Standard response time', 'Basic services', 'Email support'],
-    priority: 1
+    id: 'standard',
+    name: 'Standard Service',
+    description: 'Great service at base rates',
+    features: ['Standard response time (10-20 min)', 'All basic services', 'In-app support', 'Standard dispatch'],
+    serviceFee: 3.99,
+    responseBoost: 'Standard'
+  },
+  {
+    id: 'express',
+    name: 'Express Service',
+    description: 'Faster response for urgent needs',
+    features: ['Priority response (5-12 min)', 'All services included', 'Priority dispatch', 'Live tracking', 'SMS updates'],
+    serviceFee: 12.99,
+    responseBoost: 'Priority'
   },
   {
     id: 'premium',
-    name: 'Premium',
-    price: 19.99,
-    features: ['Priority response', 'All services included', '24/7 phone support', 'Free tire changes'],
-    priority: 2
-  },
-  {
-    id: 'enterprise',
-    name: 'Enterprise',
-    price: 49.99,
-    features: ['Fastest response', 'Unlimited services', 'Dedicated support', 'Fleet management', 'Corporate billing'],
-    priority: 3
+    name: 'Premium Service',
+    description: 'Fastest response with premium features',
+    features: ['Fastest response (3-8 min)', 'Premium providers only', 'Dedicated support line', 'Real-time family updates', 'Service guarantee'],
+    serviceFee: 19.99,
+    responseBoost: 'Fastest'
   }
 ];
 
-export const useSubscription = () => {
+export const useServiceTiers = () => {
   const { customer } = useApp();
-  const [subscription, setSubscription] = useState<{
-    tier: SubscriptionTier;
-    isActive: boolean;
-    expiresAt?: Date;
-  }>({
-    tier: SUBSCRIPTION_TIERS[0], // Default to Basic
-    isActive: true
-  });
+  const [selectedTier, setSelectedTier] = useState<ServiceTier>(SERVICE_TIERS[0]);
 
   useEffect(() => {
-    // Simulate subscription check - in real app, this would call Supabase
-    if (customer) {
-      // For demo, randomly assign premium to some users
-      const isPremium = customer.rating > 4.5;
-      setSubscription({
-        tier: isPremium ? SUBSCRIPTION_TIERS[1] : SUBSCRIPTION_TIERS[0],
-        isActive: true,
-        expiresAt: isPremium ? new Date(Date.now() + 30 * 24 * 60 * 60 * 1000) : undefined
-      });
-    }
+    // Default to standard service - no subscriptions needed
+    setSelectedTier(SERVICE_TIERS[0]);
   }, [customer]);
 
-  const upgrade = (tierId: string) => {
-    const tier = SUBSCRIPTION_TIERS.find(t => t.id === tierId);
+  const selectTier = (tierId: string) => {
+    const tier = SERVICE_TIERS.find(t => t.id === tierId);
     if (tier) {
-      setSubscription({
-        tier,
-        isActive: true,
-        expiresAt: new Date(Date.now() + 30 * 24 * 60 * 60 * 1000)
-      });
+      setSelectedTier(tier);
     }
   };
 
   return {
-    subscription,
-    upgrade,
-    tiers: SUBSCRIPTION_TIERS
+    selectedTier,
+    selectTier,
+    tiers: SERVICE_TIERS,
+    hasActiveService: true // Everyone can use the service now
   };
 };

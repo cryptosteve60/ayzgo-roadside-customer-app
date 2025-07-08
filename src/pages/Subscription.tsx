@@ -1,23 +1,16 @@
 
 import React from 'react';
 import Layout from '@/components/Layout';
-import SubscriptionCard from '@/components/SubscriptionCard';
-import { useSubscription } from '@/hooks/useSubscription';
+import ServiceTierCard from '@/components/ServiceTierCard';
+import { useServiceTiers } from '@/hooks/useSubscription';
 import { Button } from '@/components/ui/button';
-import { ArrowLeft, Crown } from 'lucide-react';
+import { ArrowLeft, Zap, DollarSign, Users, Shield } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
-import { toast } from 'sonner';
+import { Card } from '@/components/ui/card';
 
 const Subscription: React.FC = () => {
   const navigate = useNavigate();
-  const { subscription, upgrade, tiers } = useSubscription();
-
-  const handleUpgrade = (tierId: string) => {
-    if (tierId === subscription.tier.id) return;
-    
-    upgrade(tierId);
-    toast.success(`Successfully upgraded to ${tiers.find(t => t.id === tierId)?.name}!`);
-  };
+  const { selectedTier, selectTier, tiers } = useServiceTiers();
 
   return (
     <Layout>
@@ -29,63 +22,102 @@ const Subscription: React.FC = () => {
           </Button>
           <div>
             <h1 className="text-2xl font-bold flex items-center gap-2">
-              <Crown className="h-6 w-6 text-primary" />
-              Subscription Plans
+              <Zap className="h-6 w-6 text-primary" />
+              Service Options
             </h1>
-            <p className="text-muted-foreground">Choose the plan that works best for you</p>
+            <p className="text-muted-foreground">Choose your service level for each request - no subscriptions needed!</p>
           </div>
         </div>
 
-        {/* Current Plan Status */}
-        <div className="mb-8 p-4 rounded-lg bg-secondary/50">
-          <h2 className="font-bold mb-2">Current Plan</h2>
-          <div className="flex items-center justify-between">
+        {/* How It Works */}
+        <Card className="p-6 mb-8 bg-gradient-to-r from-primary/5 to-orange-500/5">
+          <h2 className="text-xl font-bold mb-4 flex items-center gap-2">
+            <DollarSign className="h-5 w-5 text-primary" />
+            How Our Pricing Works
+          </h2>
+          <div className="grid md:grid-cols-2 gap-4 text-sm">
             <div>
-              <p className="font-medium">{subscription.tier.name}</p>
-              <p className="text-sm text-muted-foreground">
-                {subscription.expiresAt 
-                  ? `Expires ${subscription.expiresAt.toLocaleDateString()}`
-                  : 'Active'}
-              </p>
+              <h3 className="font-medium mb-2">💰 Pay Per Use</h3>
+              <p className="text-muted-foreground">Only pay when you need help - no monthly fees or commitments</p>
             </div>
-            <div className="text-right">
-              <p className="text-2xl font-bold text-primary">
-                ${subscription.tier.price}
-                {subscription.tier.price > 0 && <span className="text-sm">/mo</span>}
-              </p>
+            <div>
+              <h3 className="font-medium mb-2">⚡ Choose Your Speed</h3>
+              <p className="text-muted-foreground">Select service level based on how urgent your situation is</p>
             </div>
+            <div>
+              <h3 className="font-medium mb-2">🚗 Service + Fee</h3>
+              <p className="text-muted-foreground">Service cost + small service fee (covers platform, insurance, support)</p>
+            </div>
+            <div>
+              <h3 className="font-medium mb-2">📱 Full Transparency</h3>
+              <p className="text-muted-foreground">See exact costs upfront - no hidden fees or surprise charges</p>
+            </div>
+          </div>
+        </Card>
+
+        {/* Service Tiers */}
+        <div className="mb-8">
+          <h2 className="text-xl font-bold mb-4">Service Levels Available</h2>
+          <div className="grid md:grid-cols-3 gap-6">
+            {tiers.map((tier) => (
+              <ServiceTierCard
+                key={tier.id}
+                tier={tier}
+                isSelected={tier.id === selectedTier.id}
+                onSelect={selectTier}
+              />
+            ))}
           </div>
         </div>
 
-        {/* Plans Grid */}
+        {/* Example Breakdown */}
+        <Card className="p-6 mb-8">
+          <h2 className="text-xl font-bold mb-4">Example: Battery Jump Service</h2>
+          <div className="space-y-3 text-sm">
+            <div className="flex justify-between">
+              <span>Battery Jump Service</span>
+              <span>$49.00</span>
+            </div>
+            <div className="flex justify-between">
+              <span>{selectedTier.name} Fee</span>
+              <span>+${selectedTier.serviceFee}</span>
+            </div>
+            <div className="border-t pt-2 flex justify-between font-bold">
+              <span>Total Cost</span>
+              <span>${(49 + selectedTier.serviceFee).toFixed(2)}</span>
+            </div>
+            <p className="text-muted-foreground text-xs mt-2">
+              * Final price shown before confirming each request
+            </p>
+          </div>
+        </Card>
+
+        {/* Benefits */}
         <div className="grid md:grid-cols-3 gap-6 mb-8">
-          {tiers.map((tier) => (
-            <SubscriptionCard
-              key={tier.id}
-              tier={tier}
-              isCurrentTier={tier.id === subscription.tier.id}
-              onUpgrade={handleUpgrade}
-            />
-          ))}
+          <Card className="p-4 text-center">
+            <Users className="h-8 w-8 mx-auto mb-3 text-primary" />
+            <h3 className="font-bold mb-2">No Commitments</h3>
+            <p className="text-sm text-muted-foreground">Use when you need it, nothing when you don't</p>
+          </Card>
+          <Card className="p-4 text-center">
+            <Shield className="h-8 w-8 mx-auto mb-3 text-primary" />
+            <h3 className="font-bold mb-2">Always Protected</h3>
+            <p className="text-sm text-muted-foreground">Every service includes insurance and support</p>
+          </Card>
+          <Card className="p-4 text-center">
+            <Zap className="h-8 w-8 mx-auto mb-3 text-primary" />
+            <h3 className="font-bold mb-2">Choose Your Speed</h3>
+            <p className="text-sm text-muted-foreground">From standard to premium response times</p>
+          </Card>
         </div>
 
-        {/* Benefits Section */}
         <div className="text-center">
-          <h2 className="text-xl font-bold mb-4">Why Upgrade?</h2>
-          <div className="grid md:grid-cols-3 gap-4 text-sm">
-            <div className="p-4 rounded-lg bg-secondary/30">
-              <h3 className="font-medium mb-2">Faster Response</h3>
-              <p className="text-muted-foreground">Premium members get priority dispatch</p>
-            </div>
-            <div className="p-4 rounded-lg bg-secondary/30">
-              <h3 className="font-medium mb-2">Save Money</h3>
-              <p className="text-muted-foreground">Included services save you up to $200/year</p>
-            </div>
-            <div className="p-4 rounded-lg bg-secondary/30">
-              <h3 className="font-medium mb-2">24/7 Support</h3>
-              <p className="text-muted-foreground">Always available when you need help</p>
-            </div>
-          </div>
+          <Button onClick={() => navigate('/')} size="lg">
+            Start Using Ayzgo - No Signup Required
+          </Button>
+          <p className="text-xs text-muted-foreground mt-2">
+            Ready to help 24/7 - pay only when you need us
+          </p>
         </div>
       </div>
     </Layout>
