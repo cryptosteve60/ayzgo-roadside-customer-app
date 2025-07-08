@@ -2,7 +2,6 @@
 import React, { useEffect, useRef, useState } from 'react';
 import { useApp } from '@/contexts/AppContext';
 import { Loader } from '@googlemaps/js-api-loader';
-import { config } from '@/config/env';
 
 interface MapViewProps {
   height?: string;
@@ -31,18 +30,14 @@ const MapView: React.FC<MapViewProps> = ({
         setIsLoading(true);
         setError(null);
         
-        // Check if API key is available
-        if (!config.googleMapsApiKey) {
-          setError('Google Maps API key not configured');
-          setIsLoading(false);
-          return;
-        }
+        // Use your API key directly
+        const API_KEY = 'AIzaSyA6myHzS10YXdcazAFalmXvDkrYCp5cLc8';
         
         // Initialize Google Maps
         const loader = new Loader({
-          apiKey: config.googleMapsApiKey,
+          apiKey: API_KEY,
           version: 'weekly',
-          libraries: ['places']
+          libraries: ['places', 'marker']
         });
 
         await loader.load();
@@ -123,9 +118,10 @@ const MapView: React.FC<MapViewProps> = ({
         }
         
         setIsLoading(false);
+        console.log('Google Map successfully initialized!');
       } catch (err) {
         console.error('Error loading Google Maps:', err);
-        setError('Failed to load map. Please check your API key.');
+        setError('Failed to load map. Please check your API key authorization.');
         setIsLoading(false);
       }
     };
@@ -139,6 +135,7 @@ const MapView: React.FC<MapViewProps> = ({
         <div className="text-center text-muted-foreground">
           <p className="font-medium">Map unavailable</p>
           <p className="text-xs">{error}</p>
+          <p className="text-xs mt-1">Please authorize your domain in Google Cloud Console</p>
         </div>
       </div>
     );

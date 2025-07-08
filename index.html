@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 <html lang="en">
   <head>
@@ -15,35 +16,12 @@
     <meta name="twitter:card" content="summary_large_image" />
     <meta name="twitter:site" content="Ayzgo" />
     <meta name="twitter:image" content="" />
-
-    <!-- IMPORTANT: You'll likely need a CSS file for your map's dimensions -->
-    <style>
-      #map {
-        height: 100vh; /* Make the map fill the viewport height */
-        width: 100%;  /* Make the map fill the viewport width */
-        border: 0; /* Optional: remove default iframe border */
-      }
-      body {
-        margin: 0; /* Remove default body margin to allow map to fill */
-        padding: 0; /* Remove default body padding */
-        overflow: hidden; /* Prevent scrolling if map is full screen */
-      }
-    </style>
   </head>
 
   <body>
-    <!-- This is where your Google Map will be rendered! -->
-    <div id="map"></div>
-
     <div id="root"></div>
     <!-- IMPORTANT: DO NOT REMOVE THIS SCRIPT TAG OR THIS VERY COMMENT! -->
     <script src="https://cdn.gpteng.co/gptengineer.js" type="module"></script>
     <script type="module" src="/src/main.tsx"></script>
-
-    <!-- Google Maps JavaScript API Loader Script -->
-    <!-- This script loads the Maps API using your API key and specifies the beta version. -->
-    <!-- You saw this script structure in the documentation examples! -->
-    <script>(g=>{var h,a,k,p="The Google Maps JavaScript API",c="google",l="importLibrary",q="__ib__",m=document,b=window;b=b[c]||(b[c]={});var d=b.maps||(b.maps={}),r=new Set,e=new URLSearchParams,u=()=>h||(h=new Promise(async(f,n)=>{await (a=m.createElement("script"));e.set("libraries",[...r]+"");for(k in g)e.set(k.replace(/[A-Z]/g,t=>"_"+t[0].toLowerCase()),g[k]);e.set("callback",c+".maps."+q);a.src=`https://maps.${c}apis.com/maps/api/js?`+e;d[q]=f;a.onerror=()=>h=n(Error(p+" could not load."));a.nonce=m.querySelector("script[nonce]")?.nonce||"";m.head.append(a)}));d[l]?console.warn(p+" only loads once. Ignoring:",g):d[l]=(f,...n)=>r.add(f)&&u().then(()=>d[l](f,...n))})
-        ({key: "AIzaSyA6myHzS10YXdcazAFalmXvDkrYCp5cLc8", v: "beta",});</script>
   </body>
 </html>
