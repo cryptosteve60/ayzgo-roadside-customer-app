@@ -1,7 +1,7 @@
 
 import React from "react";
 import { Link, useLocation } from "react-router-dom";
-import { Truck, Home, Wrench, ShoppingBag, User, Gift } from "lucide-react";
+import { Truck, Home, Wrench, ShoppingBag, User } from "lucide-react";
 
 interface LayoutProps {
   children: React.ReactNode;
@@ -12,7 +12,7 @@ const Layout: React.FC<LayoutProps> = ({ children }) => {
   
   return (
     <div className="min-h-screen bg-background flex flex-col">
-      {/* Enhanced Header with Rewards */}
+      {/* Clean Header - No Rewards Button */}
       <header className="flex justify-between items-center p-4 border-b bg-primary text-primary-foreground">
         <div className="flex items-center gap-2">
           <div className="h-8 w-8 rounded-full bg-white flex items-center justify-center">
@@ -20,17 +20,6 @@ const Layout: React.FC<LayoutProps> = ({ children }) => {
           </div>
           <h1 className="text-lg font-bold">Ayzgo</h1>
         </div>
-        
-        {/* Rewards Button in Header */}
-        <Link 
-          to="/rewards" 
-          className={`flex items-center gap-2 px-3 py-2 rounded-lg transition-colors ${
-            location.pathname === "/rewards" ? "bg-white/20" : "hover:bg-white/10"
-          }`}
-        >
-          <Gift className="h-5 w-5" />
-          <span className="text-sm font-medium">Rewards</span>
-        </Link>
       </header>
 
       {/* Main Content */}
@@ -38,7 +27,7 @@ const Layout: React.FC<LayoutProps> = ({ children }) => {
         {children}
       </main>
       
-      {/* Simplified Footer Navigation - Only 4 main items */}
+      {/* Footer Navigation - Only 4 main items */}
       <nav className="border-t p-2 bg-background sticky bottom-0 z-50">
         <div className="flex justify-around items-center">
           <Link 

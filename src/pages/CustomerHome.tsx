@@ -8,6 +8,7 @@ import { MapPin } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import EmergencyButton from "@/components/EmergencyButton";
 import SafetyOverlay from "@/components/SafetyOverlay";
+import RewardsOverlay from "@/components/RewardsOverlay";
 import CommunityOverlay from "@/components/CommunityOverlay";
 import ServiceRequestOverlay from "@/components/ServiceRequestOverlay";
 import LocationOverlay from "@/components/LocationOverlay";
@@ -34,7 +35,10 @@ const CustomerHome: React.FC = () => {
       {/* Emergency Button - Always Available */}
       <EmergencyButton />
       
-      {/* Safety Tools Overlay */}
+      {/* Rewards Overlay - Top Left */}
+      <RewardsOverlay />
+      
+      {/* Safety Tools Overlay - Top Right */}
       <SafetyOverlay />
       
       {/* Community Overlay */}
