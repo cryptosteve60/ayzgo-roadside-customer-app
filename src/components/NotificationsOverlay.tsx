@@ -1,4 +1,3 @@
-
 import React, { useState } from 'react';
 import { Button } from '@/components/ui/button';
 import { Card } from '@/components/ui/card';
@@ -14,8 +13,13 @@ interface Notification {
   read: boolean;
 }
 
-const NotificationsOverlay: React.FC = () => {
-  const [isOpen, setIsOpen] = useState(false);
+interface NotificationsOverlayProps {
+  isOpen: boolean;
+  onOpen: () => void;
+  onClose: () => void;
+}
+
+const NotificationsOverlay: React.FC<NotificationsOverlayProps> = ({ isOpen, onOpen, onClose }) => {
   const [notifications] = useState<Notification[]>([
     {
       id: '1',
@@ -68,7 +72,7 @@ const NotificationsOverlay: React.FC = () => {
       <div className="fixed top-72 right-4 z-40">
         <Button
           className="h-12 w-12 rounded-full bg-indigo-500 hover:bg-indigo-600 shadow-lg relative"
-          onClick={() => setIsOpen(true)}
+          onClick={onOpen}
         >
           <Bell className="h-6 w-6" />
           {unreadCount > 0 && (
@@ -94,7 +98,7 @@ const NotificationsOverlay: React.FC = () => {
               </span>
             )}
           </div>
-          <Button variant="ghost" size="sm" onClick={() => setIsOpen(false)}>
+          <Button variant="ghost" size="sm" onClick={onClose}>
             <X className="h-4 w-4" />
           </Button>
         </div>

@@ -1,13 +1,17 @@
-
-import React, { useState } from 'react';
+import React from 'react';
 import { Button } from '@/components/ui/button';
 import { Card } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { Gift, X, Star, DollarSign, Users, Target } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 
-const RewardsOverlay: React.FC = () => {
-  const [isOpen, setIsOpen] = useState(false);
+interface RewardsOverlayProps {
+  isOpen: boolean;
+  onOpen: () => void;
+  onClose: () => void;
+}
+
+const RewardsOverlay: React.FC<RewardsOverlayProps> = ({ isOpen, onOpen, onClose }) => {
   const navigate = useNavigate();
 
   // Mock user rewards data
@@ -28,7 +32,7 @@ const RewardsOverlay: React.FC = () => {
       <div className="fixed top-24 left-4 z-40">
         <Button
           className="h-12 w-12 rounded-full bg-yellow-500 hover:bg-yellow-600 shadow-lg"
-          onClick={() => setIsOpen(true)}
+          onClick={onOpen}
         >
           <Gift className="h-6 w-6" />
         </Button>
@@ -44,7 +48,7 @@ const RewardsOverlay: React.FC = () => {
             <Gift className="h-5 w-5 text-yellow-500" />
             <h3 className="font-bold">Rewards</h3>
           </div>
-          <Button variant="ghost" size="sm" onClick={() => setIsOpen(false)}>
+          <Button variant="ghost" size="sm" onClick={onClose}>
             <X className="h-4 w-4" />
           </Button>
         </div>
@@ -97,7 +101,7 @@ const RewardsOverlay: React.FC = () => {
             variant="outline"
             size="sm"
             onClick={() => {
-              setIsOpen(false);
+              onClose();
               navigate('/rewards');
             }}
             className="w-full"

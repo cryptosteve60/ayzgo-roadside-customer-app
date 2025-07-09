@@ -37,57 +37,42 @@ const CustomerHome: React.FC = () => {
       {/* Emergency Button - Always Available */}
       <EmergencyButton />
       
-      {/* Exclusive Overlay System - Only one can be open at a time */}
-      {isOverlayActive('rewards') && <RewardsOverlay />}
-      {isOverlayActive('safety') && <SafetyOverlay />}
-      {isOverlayActive('community') && <CommunityOverlay />}
-      {isOverlayActive('location') && <LocationOverlay />}
-      {isOverlayActive('support') && <SupportOverlay />}
-      {isOverlayActive('notifications') && <NotificationsOverlay />}
-      {isOverlayActive('service') && <ServiceRequestOverlay />}
-
-      {/* Overlay Trigger Buttons - Smaller and More Compact */}
-      <div className="fixed top-4 left-4 right-4 z-30 flex justify-between">
-        <button 
-          onClick={() => openOverlay('rewards')}
-          className="bg-white/90 backdrop-blur p-2 rounded-lg shadow-md hover:bg-white transition-colors"
-        >
-          <span className="text-xs font-medium">Rewards</span>
-        </button>
-        
-        <button 
-          onClick={() => openOverlay('safety')}
-          className="bg-white/90 backdrop-blur p-2 rounded-lg shadow-md hover:bg-white transition-colors"
-        >
-          <span className="text-xs font-medium">Safety</span>
-        </button>
-      </div>
-
-      <div className="fixed top-16 left-4 right-4 z-30 flex justify-between">
-        <button 
-          onClick={() => openOverlay('community')}
-          className="bg-white/90 backdrop-blur p-2 rounded-lg shadow-md hover:bg-white transition-colors"
-        >
-          <span className="text-xs font-medium">Community</span>
-        </button>
-        
-        <button 
-          onClick={() => openOverlay('support')}
-          className="bg-white/90 backdrop-blur p-2 rounded-lg shadow-md hover:bg-white transition-colors"
-        >
-          <span className="text-xs font-medium">Support</span>
-        </button>
-      </div>
-
-      {/* Service Request Button - Centered */}
-      <div className="fixed bottom-32 left-1/2 -translate-x-1/2 z-30">
-        <button 
-          onClick={() => openOverlay('service')}
-          className="bg-primary text-primary-foreground px-6 py-3 rounded-full shadow-lg hover:bg-primary/90 transition-colors font-medium"
-        >
-          Request Service
-        </button>
-      </div>
+      {/* Overlay Components - Each manages its own positioning and trigger */}
+      <RewardsOverlay 
+        isOpen={isOverlayActive('rewards')} 
+        onOpen={() => openOverlay('rewards')} 
+        onClose={closeOverlay} 
+      />
+      <SafetyOverlay 
+        isOpen={isOverlayActive('safety')} 
+        onOpen={() => openOverlay('safety')} 
+        onClose={closeOverlay} 
+      />
+      <CommunityOverlay 
+        isOpen={isOverlayActive('community')} 
+        onOpen={() => openOverlay('community')} 
+        onClose={closeOverlay} 
+      />
+      <LocationOverlay 
+        isOpen={isOverlayActive('location')} 
+        onOpen={() => openOverlay('location')} 
+        onClose={closeOverlay} 
+      />
+      <SupportOverlay 
+        isOpen={isOverlayActive('support')} 
+        onOpen={() => openOverlay('support')} 
+        onClose={closeOverlay} 
+      />
+      <NotificationsOverlay 
+        isOpen={isOverlayActive('notifications')} 
+        onOpen={() => openOverlay('notifications')} 
+        onClose={closeOverlay} 
+      />
+      <ServiceRequestOverlay 
+        isOpen={isOverlayActive('service')} 
+        onOpen={() => openOverlay('service')} 
+        onClose={closeOverlay} 
+      />
 
       {/* Active Request Overlay */}
       {currentRequest && (

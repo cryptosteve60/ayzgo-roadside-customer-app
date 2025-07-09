@@ -1,12 +1,15 @@
-
-import React, { useState } from 'react';
+import React from 'react';
 import { Button } from '@/components/ui/button';
 import { Card } from '@/components/ui/card';
 import { MessageCircle, X, Phone, Mail, HelpCircle, MapPin } from 'lucide-react';
 
-const SupportOverlay: React.FC = () => {
-  const [isOpen, setIsOpen] = useState(false);
+interface SupportOverlayProps {
+  isOpen: boolean;
+  onOpen: () => void;
+  onClose: () => void;
+}
 
+const SupportOverlay: React.FC<SupportOverlayProps> = ({ isOpen, onOpen, onClose }) => {
   const quickHelpOptions = [
     { title: 'Track my service', icon: MapPin, action: () => console.log('Track service') },
     { title: 'Cancel request', icon: X, action: () => console.log('Cancel request') },
@@ -19,7 +22,7 @@ const SupportOverlay: React.FC = () => {
       <div className="fixed top-56 right-4 z-40">
         <Button
           className="h-12 w-12 rounded-full bg-purple-500 hover:bg-purple-600 shadow-lg"
-          onClick={() => setIsOpen(true)}
+          onClick={onOpen}
         >
           <MessageCircle className="h-6 w-6" />
         </Button>
@@ -35,7 +38,7 @@ const SupportOverlay: React.FC = () => {
             <MessageCircle className="h-5 w-5 text-purple-500" />
             <h3 className="font-bold">Support</h3>
           </div>
-          <Button variant="ghost" size="sm" onClick={() => setIsOpen(false)}>
+          <Button variant="ghost" size="sm" onClick={onClose}>
             <X className="h-4 w-4" />
           </Button>
         </div>
