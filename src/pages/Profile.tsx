@@ -11,6 +11,7 @@ import { useToast } from "@/hooks/use-toast";
 import { useVehicleHealth } from "@/hooks/useVehicleHealth";
 import Layout from "@/components/Layout";
 import { User, Mail, Phone, Car, CreditCard, Users, Bell, Shield, Edit, Plus, Trash2, Star, Clock, Activity, AlertTriangle, CheckCircle, Camera, FileText, Wrench, Calendar, MapPin, History as HistoryIcon, Receipt } from "lucide-react";
+
 export default function Profile() {
   const {
     customer,
@@ -141,7 +142,7 @@ export default function Profile() {
               </Button>
             </div>
 
-            {/* Profile Picture Section with Rating Next to Name */}
+            {/* Profile Picture Section */}
             <div className="flex items-center gap-6 mb-6 pb-6 border-b">
               <div className="relative">
                 <Avatar className="h-20 w-20">
@@ -155,14 +156,14 @@ export default function Profile() {
                 </Button>
               </div>
               <div className="flex-1">
-                <div className="flex items-center gap-3 mb-2">
-                  <h3 className="text-lg font-semibold">{formData.name || "User"}</h3>
+                <h3 className="text-lg font-semibold mb-2">{formData.name || "User"}</h3>
+                <p className="text-muted-foreground mb-2">Member since January 2024</p>
+                <div className="flex justify-end">
                   <div className="flex items-center gap-1">
                     <Star className="h-4 w-4 text-yellow-500" />
                     <span className="font-bold text-sm">{customer?.rating || 4.8}</span>
                   </div>
                 </div>
-                <p className="text-muted-foreground">Member since January 2024</p>
                 {isEditing && <Button variant="link" size="sm" className="p-0 h-auto">
                     Change profile picture
                   </Button>}
