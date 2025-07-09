@@ -12,7 +12,7 @@ const Layout: React.FC<LayoutProps> = ({ children }) => {
   
   return (
     <div className="min-h-screen bg-background flex flex-col">
-      {/* Clean Header */}
+      {/* Clean Header with Orange Theme */}
       <header className="flex justify-between items-center p-4 border-b bg-primary text-primary-foreground">
         <div className="flex items-center gap-2">
           <div className="h-8 w-8 rounded-full bg-white flex items-center justify-center">
@@ -27,8 +27,8 @@ const Layout: React.FC<LayoutProps> = ({ children }) => {
         {children}
       </main>
       
-      {/* Sticky Footer Navigation - Always visible */}
-      <nav className="fixed bottom-0 left-0 right-0 border-t p-2 bg-background z-50">
+      {/* Sticky Footer Navigation - Always visible on all pages */}
+      <nav className="fixed bottom-0 left-0 right-0 border-t p-2 bg-background z-50 shadow-lg">
         <div className="flex justify-around items-center">
           <Link 
             to="/" 

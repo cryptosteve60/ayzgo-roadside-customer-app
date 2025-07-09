@@ -2,7 +2,7 @@
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { useNavigate } from "react-router-dom";
-import { Battery, Car, Fuel, Lock, Flag, Plug } from "lucide-react";
+import { Battery, CircleDot, Fuel, Lock, Truck, Plug } from "lucide-react";
 
 const services = [
   {
@@ -19,7 +19,7 @@ const services = [
     type: "tire",
     title: "Tire Change Service", 
     price: "$69",
-    icon: Car,
+    icon: CircleDot,
     description: "Flat tire? Our experts will safely change it for you.",
     details: ["Professional tire mounting and balancing", "Proper torque specifications applied", "Spare tire inspection and inflation", "Disposal of damaged tire (if requested)"],
     timeEstimate: "20-30 minutes",
@@ -49,7 +49,7 @@ const services = [
     type: "tow", 
     title: "Towing Service",
     price: "$99",
-    icon: Flag,
+    icon: Truck,
     description: "Need a tow? Professional and safe vehicle transport.",
     details: ["Flatbed towing for maximum safety", "Up to 10 miles included in base price", "Licensed and insured operators", "Secure vehicle loading and transport"],
     timeEstimate: "30-45 minutes", 
@@ -81,30 +81,30 @@ export default function ServicesGrid() {
           {services.map((service) => {
             const IconComponent = service.icon;
             return (
-              <Card key={service.type} className="p-4 hover:shadow-lg transition-shadow">
+              <Card key={service.type} className="p-4 hover:shadow-lg transition-shadow h-full flex flex-col">
                 <div className="flex items-start justify-between mb-3">
                   <div className="p-2 bg-orange-100 rounded-lg">
-                    <IconComponent className="h-6 w-6 text-primary" />
+                    <IconComponent className="h-5 w-5 text-primary" />
                   </div>
-                  <span className="text-xl font-bold text-primary">{service.price}</span>
+                  <span className="text-lg font-bold text-primary">{service.price}</span>
                 </div>
                 
-                <h3 className="text-lg font-bold mb-2">{service.title}</h3>
-                <p className="text-muted-foreground text-sm mb-3">{service.description}</p>
+                <h3 className="text-base font-bold mb-2">{service.title}</h3>
+                <p className="text-muted-foreground text-sm mb-3 flex-grow">{service.description}</p>
                 
-                <div className="space-y-2 mb-4">
+                <div className="space-y-1 mb-3">
                   <div className="flex justify-between text-xs">
                     <span className="text-muted-foreground">Time:</span>
                     <span className="font-medium">{service.timeEstimate}</span>
                   </div>
                   <div className="flex justify-between text-xs">
                     <span className="text-muted-foreground">Availability:</span>
-                    <span className="font-medium">{service.coverage}</span>
+                    <span className="font-medium text-xs">{service.coverage}</span>
                   </div>
                 </div>
                 
-                <div className="mb-4">
-                  <h4 className="font-semibold text-sm mb-2">What's Included:</h4>
+                <div className="mb-3">
+                  <h4 className="font-semibold text-xs mb-1">What's Included:</h4>
                   <ul className="text-xs text-muted-foreground space-y-1">
                     {service.details.slice(0, 2).map((detail, index) => (
                       <li key={index} className="flex items-start gap-1">
@@ -115,7 +115,7 @@ export default function ServicesGrid() {
                   </ul>
                 </div>
                 
-                <Button className="w-full text-sm py-2" onClick={() => handleRequestService(service.type)}>
+                <Button className="w-full text-sm py-2 mt-auto" onClick={() => handleRequestService(service.type)}>
                   Request Service
                 </Button>
               </Card>
