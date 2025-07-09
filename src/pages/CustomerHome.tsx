@@ -1,5 +1,5 @@
 
-import React from "react";
+import React, { useState, useEffect } from "react";
 import { Card } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import MapView from "@/components/MapView";
@@ -20,6 +20,15 @@ const CustomerHome: React.FC = () => {
   const { currentRequest, currentLocation } = useApp();
   const navigate = useNavigate();
   const { activeOverlay, openOverlay, closeOverlay, isOverlayActive } = useExclusiveOverlay();
+  const [locationStatus, setLocationStatus] = useState<string>('');
+
+  useEffect(() => {
+    if (currentLocation) {
+      setLocationStatus('GPS: Active');
+    } else {
+      setLocationStatus('GPS: Searching...');
+    }
+  }, [currentLocation]);
 
   return (
     <div className="relative h-full">
@@ -92,13 +101,19 @@ const CustomerHome: React.FC = () => {
         </div>
       )}
 
-      {/* Location Info */}
+      {/* Enhanced Location Info */}
       {currentLocation && (
         <div className="fixed bottom-32 left-4 z-30">
-          <Card className="p-2 bg-white/90 backdrop-blur">
-            <p className="text-xs text-muted-foreground">
-              📍 {currentLocation.lat.toFixed(4)}, {currentLocation.lng.toFixed(4)}
-            </p>
+          <Card className="p-3 bg-white/90 backdrop-blur shadow-lg">
+            <div className="flex items-center gap-2">
+              <MapPin className="h-4 w-4 text-green-500" />
+              <div>
+                <p className="text-sm font-medium">{locationStatus}</p>
+                <p className="text-xs text-muted-foreground">
+                  {currentLocation.lat.toFixed(4)}, {currentLocation.lng.toFixed(4)}
+                </p>
+              </div>
+            </div>
           </Card>
         </div>
       )}
