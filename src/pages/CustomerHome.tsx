@@ -43,21 +43,12 @@ const CustomerHome: React.FC = () => {
         onOpen={() => openOverlay('rewards')} 
         onClose={closeOverlay} 
       />
-      <SafetyOverlay 
-        isOpen={isOverlayActive('safety')} 
-        onOpen={() => openOverlay('safety')} 
-        onClose={closeOverlay} 
-      />
-      <CommunityOverlay 
-        isOpen={isOverlayActive('community')} 
-        onOpen={() => openOverlay('community')} 
-        onClose={closeOverlay} 
-      />
-      <LocationOverlay 
-        isOpen={isOverlayActive('location')} 
-        onOpen={() => openOverlay('location')} 
-        onClose={closeOverlay} 
-      />
+      
+      {/* These components manage their own state internally */}
+      <SafetyOverlay />
+      <CommunityOverlay />
+      <LocationOverlay />
+      
       <SupportOverlay 
         isOpen={isOverlayActive('support')} 
         onOpen={() => openOverlay('support')} 
@@ -68,11 +59,9 @@ const CustomerHome: React.FC = () => {
         onOpen={() => openOverlay('notifications')} 
         onClose={closeOverlay} 
       />
-      <ServiceRequestOverlay 
-        isOpen={isOverlayActive('service')} 
-        onOpen={() => openOverlay('service')} 
-        onClose={closeOverlay} 
-      />
+      
+      {/* ServiceRequestOverlay manages its own state */}
+      <ServiceRequestOverlay />
 
       {/* Active Request Overlay */}
       {currentRequest && (
