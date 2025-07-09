@@ -30,7 +30,9 @@ import {
   FileText,
   Wrench,
   Calendar,
-  MapPin
+  MapPin,
+  History as HistoryIcon,
+  Receipt
 } from "lucide-react";
 
 export default function Profile() {
@@ -113,6 +115,21 @@ export default function Profile() {
 
   const getInitials = (name: string) => {
     return name.split(' ').map(n => n[0]).join('').toUpperCase();
+  };
+
+  const formatServiceType = (type: string) => {
+    return type.split('_').map(word => 
+      word.charAt(0).toUpperCase() + word.slice(1)
+    ).join(' ');
+  };
+
+  const getStatusColor = (status: string) => {
+    switch (status) {
+      case "completed": return "bg-green-500";
+      case "cancelled": return "bg-red-500";
+      case "in_progress": return "bg-blue-500";
+      default: return "bg-gray-500";
+    }
   };
 
   return (
@@ -365,6 +382,78 @@ export default function Profile() {
           </div>
         </Card>
 
+        {/* Service History Section */}
+        <Card className="p-6">
+          <div className="flex items-center justify-between mb-6">
+            <div className="flex items-center gap-3">
+              <HistoryIcon className="h-6 w-6 text-primary" />
+              <h2 className="text-xl font-semibold">Service History</h2>
+            </div>
+            <Button variant="outline" size="sm" onClick={() => navigate("/history")}>
+              View All History
+            </Button>
+          </div>
+
+          <div className="space-y-4">
+            {requestHistory.length === 0 ? (
+              <div className="text-center py-8">
+                <HistoryIcon className="h-12 w-12 text-muted-foreground mx-auto mb-4" />
+                <h3 className="text-lg font-semibold mb-2">No service history</h3>
+                <p className="text-muted-foreground mb-4">Request your first service to see history here</p>
+                <Button onClick={() => navigate("/services")}>Browse Services</Button>
+              </div>
+            ) : (
+              requestHistory.slice(-3).reverse().map((request) => (
+                <Card key={request.id} className="p-4 hover:shadow-md transition-shadow">
+                  <div className="flex items-start justify-between">
+                    <div className="flex-1">
+                      <div className="flex items-center gap-3 mb-2">
+                        <h3 className="font-semibold">
+                          {formatServiceType(request.serviceType)}
+                        </h3>
+                        <Badge className={`${getStatusColor(request.status)} text-white`}>
+                          {request.status.replace('_', ' ')}
+                        </Badge>
+                      </div>
+                      
+                      <div className="grid grid-cols-1 md:grid-cols-2 gap-2 text-sm text-muted-foreground mb-2">
+                        <div className="flex items-center gap-2">
+                          <Calendar className="h-3 w-3" />
+                          <span>{new Date(request.createdAt).toLocaleDateString()}</span>
+                        </div>
+                        <div className="flex items-center gap-2">
+                          <Receipt className="h-3 w-3" />
+                          <span className="font-semibold text-primary">${request.price || 0}</span>
+                        </div>
+                      </div>
+
+                      {request.status === 'completed' && request.rating && (
+                        <div className="flex items-center gap-2">
+                          <div className="flex items-center">
+                            {[1, 2, 3, 4, 5].map((star) => (
+                              <Star 
+                                key={star} 
+                                className={`h-3 w-3 ${
+                                  star <= (request.rating || 0) 
+                                    ? 'text-yellow-500 fill-current' 
+                                    : 'text-gray-300'
+                                }`} 
+                              />
+                            ))}
+                          </div>
+                          <span className="text-xs text-muted-foreground">
+                            {request.rating}/5
+                          </span>
+                        </div>
+                      )}
+                    </div>
+                  </div>
+                </Card>
+              ))
+            )}
+          </div>
+        </Card>
+
         {/* Payment Methods */}
         <Card className="p-6">
           <div className="flex items-center justify-between mb-6">
@@ -427,38 +516,6 @@ export default function Profile() {
             ))}
           </div>
         </Card>
-
-        {/* Recent Activity */}
-        {requestHistory.length > 0 && (
-          <Card className="p-6">
-            <h3 className="font-bold mb-4 flex items-center gap-2">
-              <Activity className="h-5 w-5" />
-              Recent Activity
-            </h3>
-            <div className="space-y-3">
-              {requestHistory.slice(-5).reverse().map((request) => (
-                <div key={request.id} className="flex justify-between items-center p-3 bg-secondary/30 rounded-md">
-                  <div>
-                    <p className="font-medium capitalize">
-                      {request.serviceType.replace('_', ' ')} Service
-                    </p>
-                    <p className="text-sm text-muted-foreground">
-                      {new Date(request.createdAt).toLocaleDateString()}
-                    </p>
-                  </div>
-                  <div className="text-right">
-                    <Badge 
-                      variant={request.status === 'completed' ? 'default' : 'secondary'}
-                    >
-                      {request.status}
-                    </Badge>
-                    <p className="text-sm font-medium mt-1">${request.price}</p>
-                  </div>
-                </div>
-              ))}
-            </div>
-          </Card>
-        )}
 
         {/* Settings */}
         <div className="grid md:grid-cols-2 gap-6">
