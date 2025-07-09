@@ -31,13 +31,12 @@ const MapView: React.FC<MapViewProps> = ({
         setIsLoading(true);
         setError(null);
         
-        // Use environment variable first, then fallback
-        const API_KEY = config.googleMapsApiKey || 'AIzaSyB1OqXUwauWo10wiPjJmiRdqhnIT-1j9Ug';
+        const API_KEY = config.googleMapsApiKey;
         
         console.log('Initializing Google Maps with API key:', API_KEY ? 'Present' : 'Missing');
         
         if (!API_KEY) {
-          throw new Error('Google Maps API key is missing');
+          throw new Error('Google Maps API key is missing. Please add VITE_GOOGLE_MAPS_API_KEY to your .env file');
         }
         
         // Initialize Google Maps
@@ -92,7 +91,7 @@ const MapView: React.FC<MapViewProps> = ({
             icon: {
               url: 'data:image/svg+xml;charset=UTF-8,' + encodeURIComponent(`
                 <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                  <path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7zm0 9.5c-1.38 0-2.5-1.12-2.5-2.5s1.12-2.5 2.5-2.5 2.5 1.12 2.5 2.5-1.12 2.5-2.5 2.5z" fill="#FF6B35"/>
+                  <path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7zm0 9.5c-1.38 0-2.5-1.12-2.5-2.5s1.12-2.5 2.5-2.5 2.5 1.12 2.5 2.5-1.12 2.5-2.5 2.5z" fill="#FF6B35"/>
                 </svg>
               `),
               scaledSize: new google.maps.Size(32, 32),
@@ -143,7 +142,7 @@ const MapView: React.FC<MapViewProps> = ({
           <p className="font-medium">Map unavailable</p>
           <p className="text-xs mt-1">{error}</p>
           <p className="text-xs mt-2 text-primary">
-            Please check your Google Maps API key configuration
+            Please add your Google Maps API key to the .env file
           </p>
         </div>
       </div>
