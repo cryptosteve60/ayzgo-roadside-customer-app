@@ -15,11 +15,7 @@ import ServiceRequestOverlay from "@/components/ServiceRequestOverlay";
 import LocationOverlay from "@/components/LocationOverlay";
 import SupportOverlay from "@/components/SupportOverlay";
 import NotificationsOverlay from "@/components/NotificationsOverlay";
-
-interface AddressData {
-  city?: string;
-  state?: string;
-}
+import { mapsService, type AddressData } from "@/services/mapsService";
 
 const CustomerHome: React.FC = () => {
   const { currentRequest, currentLocation } = useApp();
@@ -29,20 +25,13 @@ const CustomerHome: React.FC = () => {
   const [address, setAddress] = useState<AddressData | null>(null);
 
   const fetchAddress = async (lat: number, lng: number) => {
-    try {
-      const response = await fetch(
-        `https://nominatim.openstreetmap.org/reverse?format=json&lat=${lat}&lon=${lng}&zoom=18&addressdetails=1`
-      );
-      const data = await response.json();
-      
-      if (data && data.address) {
-        setAddress({
-          city: data.address?.city || data.address?.town || data.address?.village,
-          state: data.address?.state
-        });
-      }
-    } catch (error) {
-      console.error('Error fetching address:', error);
+    console.log('Fetching address for coordinates:', { lat, lng });
+    const addressData = await mapsService.reverseGeocode(lat, lng);
+    if (addressData) {
+      setAddress(addressData);
+      console.log('Address updated:', addressData);
+    } else {
+      console.log('Failed to fetch address');
     }
   };
 

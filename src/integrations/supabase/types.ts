@@ -29,6 +29,51 @@ export type Database = {
         }
         Relationships: []
       }
+      companies: {
+        Row: {
+          address: string | null
+          contact_person: string | null
+          contract_end_date: string | null
+          contract_start_date: string | null
+          contract_type: string | null
+          created_at: string
+          email: string
+          id: string
+          name: string
+          phone: string | null
+          status: string
+          updated_at: string
+        }
+        Insert: {
+          address?: string | null
+          contact_person?: string | null
+          contract_end_date?: string | null
+          contract_start_date?: string | null
+          contract_type?: string | null
+          created_at?: string
+          email: string
+          id?: string
+          name: string
+          phone?: string | null
+          status?: string
+          updated_at?: string
+        }
+        Update: {
+          address?: string | null
+          contact_person?: string | null
+          contract_end_date?: string | null
+          contract_start_date?: string | null
+          contract_type?: string | null
+          created_at?: string
+          email?: string
+          id?: string
+          name?: string
+          phone?: string | null
+          status?: string
+          updated_at?: string
+        }
+        Relationships: []
+      }
       customers: {
         Row: {
           created_at: string
@@ -270,6 +315,53 @@ export type Database = {
             columns: ["job_id"]
             isOneToOne: false
             referencedRelation: "jobs"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      products: {
+        Row: {
+          availability_status: string
+          category: string
+          company_id: string
+          created_at: string
+          description: string | null
+          id: string
+          inventory_count: number | null
+          name: string
+          price: number | null
+          updated_at: string
+        }
+        Insert: {
+          availability_status?: string
+          category?: string
+          company_id: string
+          created_at?: string
+          description?: string | null
+          id?: string
+          inventory_count?: number | null
+          name: string
+          price?: number | null
+          updated_at?: string
+        }
+        Update: {
+          availability_status?: string
+          category?: string
+          company_id?: string
+          created_at?: string
+          description?: string | null
+          id?: string
+          inventory_count?: number | null
+          name?: string
+          price?: number | null
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "products_company_id_fkey"
+            columns: ["company_id"]
+            isOneToOne: false
+            referencedRelation: "companies"
             referencedColumns: ["id"]
           },
         ]

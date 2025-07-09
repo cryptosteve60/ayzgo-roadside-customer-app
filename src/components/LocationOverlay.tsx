@@ -4,11 +4,7 @@ import { Button } from '@/components/ui/button';
 import { Card } from '@/components/ui/card';
 import { MapPin, X } from 'lucide-react';
 import { useApp } from '@/contexts/AppContext';
-
-interface AddressData {
-  city?: string;
-  state?: string;
-}
+import { mapsService, type AddressData } from '@/services/mapsService';
 
 const LocationOverlay: React.FC = () => {
   const [isOpen, setIsOpen] = useState(false);
@@ -18,24 +14,17 @@ const LocationOverlay: React.FC = () => {
 
   const fetchAddress = async (lat: number, lng: number) => {
     setIsLoadingAddress(true);
-    try {
-      // Using a reverse geocoding service (example with OpenStreetMap Nominatim)
-      const response = await fetch(
-        `https://nominatim.openstreetmap.org/reverse?format=json&lat=${lat}&lon=${lng}&zoom=18&addressdetails=1`
-      );
-      const data = await response.json();
-      
-      if (data && data.address) {
-        setAddress({
-          city: data.address?.city || data.address?.town || data.address?.village,
-          state: data.address?.state
-        });
-      }
-    } catch (error) {
-      console.error('Error fetching address:', error);
-    } finally {
-      setIsLoadingAddress(false);
+    console.log('LocationOverlay: Fetching address for coordinates:', { lat, lng });
+    
+    const addressData = await mapsService.reverseGeocode(lat, lng);
+    if (addressData) {
+      setAddress(addressData);
+      console.log('LocationOverlay: Address updated:', addressData);
+    } else {
+      console.log('LocationOverlay: Failed to fetch address');
     }
+    
+    setIsLoadingAddress(false);
   };
 
   useEffect(() => {
