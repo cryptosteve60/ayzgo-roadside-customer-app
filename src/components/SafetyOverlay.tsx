@@ -38,7 +38,7 @@ const SafetyOverlay: React.FC = () => {
           </Button>
         </div>
         
-        <div className="space-y-3">
+        <div className="space-y-4">
           <div className="flex items-center justify-between">
             <div>
               <p className="font-medium">Share Location</p>
