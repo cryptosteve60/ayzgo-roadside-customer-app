@@ -2,14 +2,12 @@
 import React, { useState, useEffect } from 'react';
 import { Button } from '@/components/ui/button';
 import { Card } from '@/components/ui/card';
-import { MapPin, X, Copy, Navigation } from 'lucide-react';
+import { MapPin, X } from 'lucide-react';
 import { useApp } from '@/contexts/AppContext';
 
 interface AddressData {
-  formatted_address?: string;
   city?: string;
   state?: string;
-  country?: string;
 }
 
 const LocationOverlay: React.FC = () => {
@@ -27,12 +25,10 @@ const LocationOverlay: React.FC = () => {
       );
       const data = await response.json();
       
-      if (data && data.display_name) {
+      if (data && data.address) {
         setAddress({
-          formatted_address: data.display_name,
           city: data.address?.city || data.address?.town || data.address?.village,
-          state: data.address?.state,
-          country: data.address?.country
+          state: data.address?.state
         });
       }
     } catch (error) {
@@ -47,19 +43,6 @@ const LocationOverlay: React.FC = () => {
       fetchAddress(currentLocation.lat, currentLocation.lng);
     }
   }, [currentLocation, isOpen]);
-
-  const copyCoordinates = () => {
-    if (currentLocation) {
-      navigator.clipboard.writeText(`${currentLocation.lat}, ${currentLocation.lng}`);
-    }
-  };
-
-  const openInMaps = () => {
-    if (currentLocation) {
-      const url = `https://maps.google.com/?q=${currentLocation.lat},${currentLocation.lng}`;
-      window.open(url, '_blank');
-    }
-  };
 
   if (!isOpen) {
     return (
@@ -90,51 +73,16 @@ const LocationOverlay: React.FC = () => {
         <div className="space-y-3">
           {currentLocation ? (
             <>
-              <div>
-                <p className="text-sm font-medium text-muted-foreground">Address</p>
-                {isLoadingAddress ? (
-                  <p className="text-sm text-muted-foreground">Loading address...</p>
-                ) : address?.formatted_address ? (
-                  <p className="text-sm">{address.formatted_address}</p>
-                ) : (
-                  <p className="text-sm text-muted-foreground">Address not available</p>
-                )}
-              </div>
-
-              {address?.city && (
+              {isLoadingAddress ? (
+                <p className="text-sm text-muted-foreground">Loading location...</p>
+              ) : address?.city && address?.state ? (
                 <div>
-                  <p className="text-sm font-medium text-muted-foreground">City</p>
-                  <p className="text-sm">{address.city}{address.state && `, ${address.state}`}</p>
+                  <p className="text-sm font-medium text-muted-foreground">Location</p>
+                  <p className="text-sm">{address.city}, {address.state}</p>
                 </div>
+              ) : (
+                <p className="text-sm text-muted-foreground">Location not available</p>
               )}
-              
-              <div>
-                <p className="text-sm font-medium text-muted-foreground">GPS Coordinates</p>
-                <p className="text-sm font-mono">
-                  {currentLocation.lat.toFixed(6)}, {currentLocation.lng.toFixed(6)}
-                </p>
-              </div>
-
-              <div className="flex gap-2">
-                <Button
-                  variant="outline"
-                  size="sm"
-                  onClick={copyCoordinates}
-                  className="flex-1"
-                >
-                  <Copy className="h-4 w-4 mr-2" />
-                  Copy
-                </Button>
-                <Button
-                  variant="outline"
-                  size="sm"
-                  onClick={openInMaps}
-                  className="flex-1"
-                >
-                  <Navigation className="h-4 w-4 mr-2" />
-                  Maps
-                </Button>
-              </div>
             </>
           ) : (
             <div className="text-center text-muted-foreground">
