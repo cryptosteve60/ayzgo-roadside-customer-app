@@ -12,7 +12,7 @@ const Layout: React.FC<LayoutProps> = ({ children }) => {
   
   return (
     <div className="min-h-screen bg-background flex flex-col">
-      {/* Clean Header - No Rewards Button */}
+      {/* Clean Header */}
       <header className="flex justify-between items-center p-4 border-b bg-primary text-primary-foreground">
         <div className="flex items-center gap-2">
           <div className="h-8 w-8 rounded-full bg-white flex items-center justify-center">
@@ -22,13 +22,13 @@ const Layout: React.FC<LayoutProps> = ({ children }) => {
         </div>
       </header>
 
-      {/* Main Content */}
-      <main className="flex-1 relative">
+      {/* Main Content with bottom padding to account for sticky footer */}
+      <main className="flex-1 relative pb-20">
         {children}
       </main>
       
-      {/* Footer Navigation - Only 4 main items */}
-      <nav className="border-t p-2 bg-background sticky bottom-0 z-50">
+      {/* Sticky Footer Navigation - Always visible */}
+      <nav className="fixed bottom-0 left-0 right-0 border-t p-2 bg-background z-50">
         <div className="flex justify-around items-center">
           <Link 
             to="/" 
