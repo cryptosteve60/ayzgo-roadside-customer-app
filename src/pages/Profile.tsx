@@ -11,7 +11,6 @@ import { useToast } from "@/hooks/use-toast";
 import { useVehicleHealth } from "@/hooks/useVehicleHealth";
 import Layout from "@/components/Layout";
 import { User, Mail, Phone, Car, CreditCard, Users, Bell, Shield, Edit, Plus, Trash2, Star, Clock, Activity, AlertTriangle, CheckCircle, Camera, FileText, Wrench, Calendar, MapPin, History as HistoryIcon, Receipt } from "lucide-react";
-
 export default function Profile() {
   const {
     customer,
@@ -32,7 +31,6 @@ export default function Profile() {
     email: customer?.email || "",
     phone: customer?.phone || ""
   });
-
   const [vehicles, setVehicles] = useState([{
     id: "1",
     year: "2020",
@@ -58,7 +56,6 @@ export default function Profile() {
     insurance: "Geico",
     registrationExpiry: "2024-11-20"
   }]);
-
   const [emergencyContacts, setEmergencyContacts] = useState([{
     id: "1",
     name: "Jane Doe",
@@ -70,7 +67,6 @@ export default function Profile() {
     phone: "+1234567892",
     relationship: "Brother"
   }]);
-
   const [paymentMethods] = useState([{
     id: "1",
     type: "card",
@@ -84,10 +80,8 @@ export default function Profile() {
     brand: "Mastercard",
     isDefault: false
   }]);
-
   const overdueItems = getOverdueItems();
   const upcomingItems = getUpcomingItems();
-
   const handleSaveProfile = () => {
     toast({
       title: "Profile Updated",
@@ -95,14 +89,12 @@ export default function Profile() {
     });
     setIsEditing(false);
   };
-
   const handleAddVehicle = () => {
     toast({
       title: "Add Vehicle",
       description: "Vehicle management coming soon!"
     });
   };
-
   const handleRemoveVehicle = (vehicleId: string) => {
     setVehicles(vehicles.filter(v => v.id !== vehicleId));
     toast({
@@ -110,15 +102,12 @@ export default function Profile() {
       description: "Vehicle has been removed from your garage."
     });
   };
-
   const getInitials = (name: string) => {
     return name.split(' ').map(n => n[0]).join('').toUpperCase();
   };
-
   const formatServiceType = (type: string) => {
     return type.split('_').map(word => word.charAt(0).toUpperCase() + word.slice(1)).join(' ');
   };
-
   const getStatusColor = (status: string) => {
     switch (status) {
       case "completed":
@@ -131,17 +120,11 @@ export default function Profile() {
         return "bg-gray-500";
     }
   };
-
-  return (
-    <Layout>
+  return <Layout>
       <div className="min-h-screen bg-background">
         {/* Header with Orange Theme */}
         <header className="border-b bg-primary text-primary-foreground sticky top-0 z-40">
-          <div className="container max-w-4xl mx-auto px-4 py-4">
-            <div className="flex items-center justify-between">
-              <h1 className="text-2xl font-bold">My Profile</h1>
-            </div>
-          </div>
+          
         </header>
 
         <div className="container max-w-4xl mx-auto px-4 py-8 space-y-8">
@@ -232,8 +215,8 @@ export default function Profile() {
 
             <div className="space-y-6">
               {vehicles.map(vehicle => {
-                const healthData = vehicleHealthData.find(v => v.make === vehicle.make && v.model === vehicle.model);
-                return <Card key={vehicle.id} className="p-6 border-2">
+              const healthData = vehicleHealthData.find(v => v.make === vehicle.make && v.model === vehicle.model);
+              return <Card key={vehicle.id} className="p-6 border-2">
                   <div className="flex items-start justify-between mb-4">
                     <div className="flex gap-4">
                       <div className="w-16 h-16 bg-secondary rounded-lg flex items-center justify-center">
@@ -324,7 +307,7 @@ export default function Profile() {
                       </div>
                     </div>}
                 </Card>;
-              })}
+            })}
             </div>
           </Card>
 
@@ -483,6 +466,5 @@ export default function Profile() {
           </div>
         </div>
       </div>
-    </Layout>
-  );
+    </Layout>;
 }
