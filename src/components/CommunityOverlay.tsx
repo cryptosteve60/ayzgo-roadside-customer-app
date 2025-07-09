@@ -60,33 +60,33 @@ const CommunityOverlay: React.FC = () => {
 
   return (
     <div className="fixed top-40 right-4 z-40">
-      <Card className="p-4 w-72 h-80 shadow-lg flex flex-col">
-        <div className="flex items-center justify-between mb-4">
+      <Card className="p-3 w-64 h-72 shadow-lg flex flex-col">
+        <div className="flex items-center justify-between mb-3">
           <div className="flex items-center gap-2">
-            <Users className="h-5 w-5 text-green-500" />
-            <h3 className="font-bold">Community</h3>
+            <Users className="h-4 w-4 text-green-500" />
+            <h3 className="font-bold text-sm">Community</h3>
           </div>
-          <Button variant="ghost" size="sm" onClick={() => setIsOpen(false)}>
-            <X className="h-4 w-4" />
+          <Button variant="ghost" size="sm" onClick={() => setIsOpen(false)} className="h-6 w-6 p-0">
+            <X className="h-3 w-3" />
           </Button>
         </div>
         
-        <ScrollArea className="flex-1 mb-4">
-          <div className="space-y-3">
+        <ScrollArea className="flex-1 mb-3">
+          <div className="space-y-2">
             {messages.map((msg) => (
-              <div key={msg.id} className="p-3 rounded-lg bg-secondary/50">
+              <div key={msg.id} className="p-2 rounded-lg bg-secondary/50">
                 <div className="flex items-center gap-2 mb-1">
                   {msg.type === 'alert' ? (
-                    <AlertTriangle className="h-4 w-4 text-orange-500" />
+                    <AlertTriangle className="h-3 w-3 text-orange-500" />
                   ) : (
-                    <MessageCircle className="h-4 w-4 text-blue-500" />
+                    <MessageCircle className="h-3 w-3 text-blue-500" />
                   )}
-                  <span className="font-medium text-sm">{msg.user}</span>
+                  <span className="font-medium text-xs">{msg.user}</span>
                   {msg.location && (
                     <span className="text-xs text-muted-foreground">• {msg.location}</span>
                   )}
                 </div>
-                <p className="text-sm">{msg.message}</p>
+                <p className="text-xs">{msg.message}</p>
                 <p className="text-xs text-muted-foreground mt-1">
                   {msg.timestamp.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
                 </p>
@@ -95,7 +95,7 @@ const CommunityOverlay: React.FC = () => {
           </div>
         </ScrollArea>
 
-        <Button size="sm" className="w-full">
+        <Button size="sm" className="w-full h-7 text-xs">
           Join Chat
         </Button>
       </Card>

@@ -1,3 +1,4 @@
+
 import React from 'react';
 import { Button } from '@/components/ui/button';
 import { Card } from '@/components/ui/card';
@@ -32,20 +33,20 @@ const SupportOverlay: React.FC<SupportOverlayProps> = ({ isOpen, onOpen, onClose
 
   return (
     <div className="fixed top-56 right-4 z-40">
-      <Card className="p-4 w-72 h-80 shadow-lg flex flex-col">
-        <div className="flex items-center justify-between mb-4">
+      <Card className="p-3 w-64 h-72 shadow-lg flex flex-col">
+        <div className="flex items-center justify-between mb-3">
           <div className="flex items-center gap-2">
-            <MessageCircle className="h-5 w-5 text-purple-500" />
-            <h3 className="font-bold">Support</h3>
+            <MessageCircle className="h-4 w-4 text-purple-500" />
+            <h3 className="font-bold text-sm">Support</h3>
           </div>
-          <Button variant="ghost" size="sm" onClick={onClose}>
-            <X className="h-4 w-4" />
+          <Button variant="ghost" size="sm" onClick={onClose} className="h-6 w-6 p-0">
+            <X className="h-3 w-3" />
           </Button>
         </div>
         
-        <div className="space-y-4 flex-1">
+        <div className="space-y-3 flex-1">
           <div>
-            <h4 className="font-medium mb-2">Quick Help</h4>
+            <h4 className="font-medium mb-2 text-xs">Quick Help</h4>
             <div className="grid grid-cols-2 gap-2">
               {quickHelpOptions.map((option, index) => (
                 <Button
@@ -61,22 +62,22 @@ const SupportOverlay: React.FC<SupportOverlayProps> = ({ isOpen, onOpen, onClose
             </div>
           </div>
 
-          <div className="border-t pt-4">
-            <h4 className="font-medium mb-2">Contact Support</h4>
+          <div className="border-t pt-3">
+            <h4 className="font-medium mb-2 text-xs">Contact Support</h4>
             <div className="space-y-2">
-              <Button variant="outline" size="sm" className="w-full justify-start">
-                <Phone className="h-4 w-4 mr-2" />
+              <Button variant="outline" size="sm" className="w-full justify-start h-7 text-xs">
+                <Phone className="h-3 w-3 mr-2" />
                 Call Support: (555) 123-4567
               </Button>
-              <Button variant="outline" size="sm" className="w-full justify-start">
-                <Mail className="h-4 w-4 mr-2" />
+              <Button variant="outline" size="sm" className="w-full justify-start h-7 text-xs">
+                <Mail className="h-3 w-3 mr-2" />
                 Email: support@ayzgo.com
               </Button>
             </div>
           </div>
         </div>
 
-        <Button className="w-full mt-4 bg-purple-500 hover:bg-purple-600">
+        <Button className="w-full mt-3 bg-purple-500 hover:bg-purple-600 h-7 text-xs">
           Start Live Chat
         </Button>
       </Card>
