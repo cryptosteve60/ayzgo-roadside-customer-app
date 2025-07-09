@@ -1,3 +1,4 @@
+
 import React from "react";
 import { Card } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
@@ -37,13 +38,13 @@ const CustomerHome: React.FC = () => {
       <EmergencyButton />
       
       {/* Exclusive Overlay System - Only one can be open at a time */}
-      {isOverlayActive('rewards') && <RewardsOverlay onClose={closeOverlay} />}
-      {isOverlayActive('safety') && <SafetyOverlay onClose={closeOverlay} />}
-      {isOverlayActive('community') && <CommunityOverlay onClose={closeOverlay} />}
-      {isOverlayActive('location') && <LocationOverlay onClose={closeOverlay} />}
-      {isOverlayActive('support') && <SupportOverlay onClose={closeOverlay} />}
-      {isOverlayActive('notifications') && <NotificationsOverlay onClose={closeOverlay} />}
-      {isOverlayActive('service') && <ServiceRequestOverlay onClose={closeOverlay} />}
+      {isOverlayActive('rewards') && <RewardsOverlay />}
+      {isOverlayActive('safety') && <SafetyOverlay />}
+      {isOverlayActive('community') && <CommunityOverlay />}
+      {isOverlayActive('location') && <LocationOverlay />}
+      {isOverlayActive('support') && <SupportOverlay />}
+      {isOverlayActive('notifications') && <NotificationsOverlay />}
+      {isOverlayActive('service') && <ServiceRequestOverlay />}
 
       {/* Overlay Trigger Buttons - Smaller and More Compact */}
       <div className="fixed top-4 left-4 right-4 z-30 flex justify-between">

@@ -5,7 +5,7 @@ import { Input } from "@/components/ui/input";
 import { useNavigate } from "react-router-dom";
 import { useApp } from "@/contexts/AppContext";
 import Layout from "@/components/Layout";
-import { Search, Car, Wrench, Shield, Sparkles, Camera, ShoppingBag, Star, MapPin, Clock, Phone, Navigation, ChevronDown, Utensils, Fuel, Pharmacy, Hammer, Coffee, Store } from "lucide-react";
+import { Search, Car, Wrench, Shield, Sparkles, Camera, ShoppingBag, Star, MapPin, Clock, Phone, Navigation, ChevronDown, Utensils, Fuel, Cross, Hammer, Coffee, Store } from "lucide-react";
 import { useState } from "react";
 
 export default function Products() {
@@ -23,7 +23,7 @@ export default function Products() {
     { id: "automotive", title: "Automotive Services", icon: Car },
     { id: "restaurants", title: "Restaurants & Food", icon: Utensils },
     { id: "gas", title: "Gas Stations", icon: Fuel },
-    { id: "pharmacy", title: "Pharmacies", icon: Pharmacy },
+    { id: "pharmacy", title: "Pharmacies", icon: Cross },
     { id: "retail", title: "Retail Stores", icon: Store },
     { id: "services", title: "Professional Services", icon: Hammer },
     { id: "cafes", title: "Cafes & Coffee", icon: Coffee },
@@ -209,6 +209,25 @@ export default function Products() {
         }
       ]
     },
+    {
+      id: "pharmacy",
+      title: "Pharmacies",
+      icon: Cross,
+      description: "Local pharmacies and health services",
+      color: "bg-green-600",
+      image: "https://images.unsplash.com/photo-1576091160399-112ba8d25d1f?w=400&h=200&fit=crop",
+      businesses: [
+        {
+          name: "CVS Pharmacy",
+          rating: 4.3,
+          services: "Pharmacy, Health",
+          distance: "0.4 miles",
+          image: "https://images.unsplash.com/photo-1576091160550-2173dba999ef?w=300&h=150&fit=crop",
+          phone: "(555) 444-4444",
+          address: "321 Health Ave"
+        }
+      ]
+    }
   ];
 
   const filteredCategories = selectedCategory === "all"
@@ -449,6 +468,33 @@ export default function Products() {
                             </div>
                             <p className="text-xs text-muted-foreground mb-3">{station.address}</p>
                             <Button size="sm" className="w-full">Get Directions</Button>
+                          </div>
+                        </Card>)}
+                    </div>}
+                  {category.id === "pharmacy" && <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
+                      {category.businesses?.map(business => <Card key={business.name} className="overflow-hidden hover:shadow-lg transition-shadow">
+                          <img src={business.image} alt={business.name} className="w-full h-32 object-cover" />
+                          <div className="p-4">
+                            <div className="flex items-center justify-between mb-3">
+                              <h3 className="font-semibold">{business.name}</h3>
+                              <div className="flex items-center gap-1">
+                                <Star className="h-4 w-4 text-yellow-500 fill-current" />
+                                <span className="text-sm font-medium">{business.rating}</span>
+                              </div>
+                            </div>
+                            <Badge variant="secondary" className="mb-3">{business.services}</Badge>
+                            <div className="flex items-center gap-4 mb-3 text-sm text-muted-foreground">
+                              <div className="flex items-center gap-1">
+                                <MapPin className="h-3 w-3" />
+                                <span>{business.distance}</span>
+                              </div>
+                              <div className="flex items-center gap-1">
+                                <Phone className="h-3 w-3" />
+                                <span>{business.phone}</span>
+                              </div>
+                            </div>
+                            <p className="text-xs text-muted-foreground mb-3">{business.address}</p>
+                            <Button size="sm" className="w-full">Visit Store</Button>
                           </div>
                         </Card>)}
                     </div>}
