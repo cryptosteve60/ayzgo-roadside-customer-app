@@ -1,73 +1,51 @@
-# Welcome to your Lovable project
+📌 About AZYGO Customer App
+AZYGO is reinventing roadside assistance. We connect customers to independent drivers quickly, safely, and affordably. No monthly fees. Just help when you need it — from local, vetted professionals.
 
-## Project info
+yaml
+Copy
+Edit
 
-**URL**: https://lovable.dev/projects/cf84d094-2fdf-4dbb-a705-43884155f694
+---
 
-## How can I edit this code?
+## ✅ 3. AZYGO Dashboard (Admin Portal) – `README.md`
 
-There are several ways of editing your application.
+```markdown
+# AZYGO Admin Dashboard
 
-**Use Lovable**
+The AZYGO Admin Dashboard is the centralized command center for managing the AZYGO platform — overseeing drivers, customers, job requests, payouts, support tickets, and performance analytics.
 
-Simply visit the [Lovable Project](https://lovable.dev/projects/cf84d094-2fdf-4dbb-a705-43884155f694) and start prompting.
+## 🧰 Features
 
-Changes made via Lovable will be committed automatically to this repo.
+- Real-time job monitoring
+- Driver and customer management
+- Issue resolution tools
+- Earnings and payout tracking
+- Admin notifications
+- Metrics and reporting dashboards
 
-**Use your preferred IDE**
+## 🛠 Tech Stack
 
-If you want to work locally using your own IDE, you can clone this repo and push changes. Pushed changes will also be reflected in Lovable.
+- **Frontend**: React.js
+- **Backend**: Firebase / Node.js / Admin SDK
+- **Database**: Firestore
+- **Charting**: Chart.js or Recharts
 
-The only requirement is having Node.js & npm installed - [install with nvm](https://github.com/nvm-sh/nvm#installing-and-updating)
+## 🧱 Setup Instructions
 
-Follow these steps:
+1. Clone this repository:
+   ```bash
+   git clone https://github.com/azygo/admin-dashboard.git
 
-```sh
-# Step 1: Clone the repository using the project's Git URL.
-git clone <YOUR_GIT_URL>
+2. Install dependencies:
 
-# Step 2: Navigate to the project directory.
-cd <YOUR_PROJECT_NAME>
+   npm install
 
-# Step 3: Install the necessary dependencies.
-npm i
+3. Add Firebase credentials
 
-# Step 4: Start the development server with auto-reloading and an instant preview.
-npm run dev
-```
+4. Run the dashboard locally:
 
-**Edit a file directly in GitHub**
+   npm run dev
 
-- Navigate to the desired file(s).
-- Click the "Edit" button (pencil icon) at the top right of the file view.
-- Make your changes and commit the changes.
+📄 License
+MIT License
 
-**Use GitHub Codespaces**
-
-- Navigate to the main page of your repository.
-- Click on the "Code" button (green button) near the top right.
-- Select the "Codespaces" tab.
-- Click on "New codespace" to launch a new Codespace environment.
-- Edit files directly within the Codespace and commit and push your changes once you're done.
-
-## What technologies are used for this project?
-
-This project is built with:
-
-- Vite
-- TypeScript
-- React
-- shadcn-ui
-- Tailwind CSS
-
-## How can I deploy this project?
-
-Simply open [Lovable](https://lovable.dev/projects/cf84d094-2fdf-4dbb-a705-43884155f694) and click on Share -> Publish.
-
-## Can I connect a custom domain to my Lovable project?
-
-Yes, you can!
-
-To connect a domain, navigate to Project > Settings > Domains and click Connect Domain.
-
-Read more here: [Setting up a custom domain](https://docs.lovable.dev/tips-tricks/custom-domain#step-by-step-guide)
