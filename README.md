@@ -1,4 +1,4 @@
-📌 About AZYGO Customer App
+AZYGO Customer App
 AZYGO is reinventing roadside assistance. We connect customers to independent drivers quickly, safely, and affordably. No monthly fees. Just help when you need it — from local, vetted professionals.
 
 yaml
