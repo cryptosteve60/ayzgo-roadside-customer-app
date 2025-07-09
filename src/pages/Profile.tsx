@@ -156,14 +156,14 @@ export default function Profile() {
                 </Button>
               </div>
               <div className="flex-1">
-                <h3 className="text-lg font-semibold mb-2">{formData.name || "User"}</h3>
-                <p className="text-muted-foreground mb-2">Member since January 2024</p>
-                <div className="flex justify-end">
+                <div className="flex items-center justify-between mb-2">
+                  <h3 className="text-lg font-semibold">{formData.name || "User"}</h3>
                   <div className="flex items-center gap-1">
                     <Star className="h-4 w-4 text-yellow-500" />
                     <span className="font-bold text-sm">{customer?.rating || 4.8}</span>
                   </div>
                 </div>
+                <p className="text-muted-foreground mb-2">Member since January 2024</p>
                 {isEditing && <Button variant="link" size="sm" className="p-0 h-auto">
                     Change profile picture
                   </Button>}
