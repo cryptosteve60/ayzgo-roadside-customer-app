@@ -16,15 +16,40 @@ import LocationOverlay from "@/components/LocationOverlay";
 import SupportOverlay from "@/components/SupportOverlay";
 import NotificationsOverlay from "@/components/NotificationsOverlay";
 
+interface AddressData {
+  city?: string;
+  state?: string;
+}
+
 const CustomerHome: React.FC = () => {
   const { currentRequest, currentLocation } = useApp();
   const navigate = useNavigate();
   const { activeOverlay, openOverlay, closeOverlay, isOverlayActive } = useExclusiveOverlay();
   const [locationStatus, setLocationStatus] = useState<string>('');
+  const [address, setAddress] = useState<AddressData | null>(null);
+
+  const fetchAddress = async (lat: number, lng: number) => {
+    try {
+      const response = await fetch(
+        `https://nominatim.openstreetmap.org/reverse?format=json&lat=${lat}&lon=${lng}&zoom=18&addressdetails=1`
+      );
+      const data = await response.json();
+      
+      if (data && data.address) {
+        setAddress({
+          city: data.address?.city || data.address?.town || data.address?.village,
+          state: data.address?.state
+        });
+      }
+    } catch (error) {
+      console.error('Error fetching address:', error);
+    }
+  };
 
   useEffect(() => {
     if (currentLocation) {
       setLocationStatus('GPS: Active');
+      fetchAddress(currentLocation.lat, currentLocation.lng);
     } else {
       setLocationStatus('GPS: Searching...');
     }
@@ -110,7 +135,7 @@ const CustomerHome: React.FC = () => {
               <div>
                 <p className="text-sm font-medium">{locationStatus}</p>
                 <p className="text-xs text-muted-foreground">
-                  {currentLocation.lat.toFixed(4)}, {currentLocation.lng.toFixed(4)}
+                  {address?.city && address?.state ? `${address.city}, ${address.state}` : 'Loading location...'}
                 </p>
               </div>
             </div>
