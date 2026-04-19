@@ -12,10 +12,10 @@ interface SupportOverlayProps {
 
 const SupportOverlay: React.FC<SupportOverlayProps> = ({ isOpen, onOpen, onClose }) => {
   const quickHelpOptions = [
-    { title: 'Track my service', icon: MapPin, action: () => console.log('Track service') },
-    { title: 'Cancel request', icon: X, action: () => console.log('Cancel request') },
-    { title: 'Payment issues', icon: Phone, action: () => console.log('Payment help') },
-    { title: 'Report problem', icon: HelpCircle, action: () => console.log('Report problem') }
+    { title: 'Track my service', icon: MapPin, action: () => {} },
+    { title: 'Cancel request', icon: X, action: () => {} },
+    { title: 'Payment issues', icon: Phone, action: () => {} },
+    { title: 'Report problem', icon: HelpCircle, action: () => {} }
   ];
 
   if (!isOpen) {

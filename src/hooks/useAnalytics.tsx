@@ -53,9 +53,9 @@ export const useAnalytics = () => {
     setAnalytics(mockData);
   }, []);
 
-  const trackEvent = (eventName: string, properties?: Record<string, any>) => {
-    console.log('Analytics Event:', eventName, properties);
-    // In real app, send to analytics service
+  // TODO: Replace with real analytics service (Segment, Mixpanel, etc.)
+  const trackEvent = (_eventName: string, _properties?: Record<string, unknown>) => {
+    // no-op until analytics backend is wired
   };
 
   return {

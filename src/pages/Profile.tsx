@@ -11,6 +11,8 @@ import { useToast } from "@/hooks/use-toast";
 import { useVehicleHealth } from "@/hooks/useVehicleHealth";
 import Layout from "@/components/Layout";
 import { User, Mail, Phone, Car, CreditCard, Users, Bell, Shield, Edit, Plus, Trash2, Star, Clock, Activity, AlertTriangle, CheckCircle, Camera, FileText, Wrench, Calendar, MapPin, History as HistoryIcon, Receipt } from "lucide-react";
+import { formatServiceType, } from "@/utils/serviceTypeUtils";
+import { getStatusColor } from "@/utils/statusUtils";
 
 export default function Profile() {
   const {
@@ -105,21 +107,6 @@ export default function Profile() {
   };
   const getInitials = (name: string) => {
     return name.split(' ').map(n => n[0]).join('').toUpperCase();
-  };
-  const formatServiceType = (type: string) => {
-    return type.split('_').map(word => word.charAt(0).toUpperCase() + word.slice(1)).join(' ');
-  };
-  const getStatusColor = (status: string) => {
-    switch (status) {
-      case "completed":
-        return "bg-green-500";
-      case "cancelled":
-        return "bg-red-500";
-      case "in_progress":
-        return "bg-blue-500";
-      default:
-        return "bg-gray-500";
-    }
   };
   return <Layout>
       <div className="min-h-screen bg-background">
