@@ -7,6 +7,7 @@ import { Card } from "@/components/ui/card";
 import { Link, useNavigate } from "react-router-dom";
 import { useToast } from "@/hooks/use-toast";
 import { Mail, Lock, User, Phone, Eye, EyeOff } from "lucide-react";
+import { supabase } from "@/integrations/supabase/client";
 
 export default function Signup() {
   const [formData, setFormData] = useState({
@@ -39,15 +40,22 @@ export default function Signup() {
       return;
     }
 
-    // Mock signup - replace with real authentication
-    setTimeout(() => {
-      toast({
-        title: "Welcome to Ayzgo! 🎉",
-        description: "Your account has been created successfully."
-      });
+    const { error } = await supabase.auth.signUp({
+      email: formData.email,
+      password: formData.password,
+      options: {
+        data: { full_name: formData.name, phone: formData.phone },
+      },
+    });
+
+    if (error) {
+      toast({ variant: "destructive", title: "Signup Failed", description: error.message });
+    } else {
+      toast({ title: "Welcome to Ayzgo!", description: "Your account has been created successfully." });
       navigate("/");
-      setIsLoading(false);
-    }, 1000);
+    }
+
+    setIsLoading(false);
   };
 
   return (

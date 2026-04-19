@@ -4,10 +4,11 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Card } from "@/components/ui/card";
-import { Link, useNavigate } from "react-router-dom";
+import { Link, useNavigate, useLocation } from "react-router-dom";
 import { useToast } from "@/hooks/use-toast";
 import { Mail, Lock, Eye, EyeOff } from "lucide-react";
 import Layout from "@/components/Layout";
+import { supabase } from "@/integrations/supabase/client";
 
 export default function Login() {
   const [email, setEmail] = useState("");
@@ -16,28 +17,27 @@ export default function Login() {
   const [isLoading, setIsLoading] = useState(false);
   const { toast } = useToast();
   const navigate = useNavigate();
+  const location = useLocation();
+  const from = (location.state as { from?: { pathname: string } })?.from?.pathname ?? "/";
 
   const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault();
     setIsLoading(true);
 
-    // Mock login - replace with real authentication
-    setTimeout(() => {
-      if (email && password) {
-        toast({
-          title: "Welcome back! 🚗",
-          description: "You've successfully logged in."
-        });
-        navigate("/");
-      } else {
-        toast({
-          variant: "destructive",
-          title: "Login Failed",
-          description: "Please check your email and password."
-        });
-      }
-      setIsLoading(false);
-    }, 1000);
+    const { error } = await supabase.auth.signInWithPassword({ email, password });
+
+    if (error) {
+      toast({
+        variant: "destructive",
+        title: "Login Failed",
+        description: error.message,
+      });
+    } else {
+      toast({ title: "Welcome back!", description: "You've successfully logged in." });
+      navigate(from, { replace: true });
+    }
+
+    setIsLoading(false);
   };
 
   return (

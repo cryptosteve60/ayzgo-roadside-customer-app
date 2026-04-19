@@ -14,16 +14,10 @@ const LocationOverlay: React.FC = () => {
 
   const fetchAddress = async (lat: number, lng: number) => {
     setIsLoadingAddress(true);
-    console.log('LocationOverlay: Fetching address for coordinates:', { lat, lng });
-    
     const addressData = await mapsService.reverseGeocode(lat, lng);
     if (addressData) {
       setAddress(addressData);
-      console.log('LocationOverlay: Address updated:', addressData);
-    } else {
-      console.log('LocationOverlay: Failed to fetch address');
     }
-    
     setIsLoadingAddress(false);
   };
 

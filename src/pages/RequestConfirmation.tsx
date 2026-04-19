@@ -3,7 +3,8 @@ import { useLocation, useNavigate } from "react-router-dom";
 import { ServiceRequest } from "@/contexts/AppContext";
 import { Button } from "@/components/ui/button";
 import MapView from "@/components/MapView";
-import { Battery, Car, Flag, Fuel, Lock, Star, User } from "lucide-react";
+import { Star, User } from "lucide-react";
+import { getServiceIcon, getServiceTitle } from "@/utils/serviceTypeUtils";
 import { Card } from "@/components/ui/card";
 
 const RequestConfirmation: React.FC = () => {
@@ -53,40 +54,6 @@ const RequestConfirmation: React.FC = () => {
     return () => clearInterval(timer);
   }, []);
   
-  const getIcon = () => {
-    if (!job) return <Car />;
-    
-    switch (job.serviceType) {
-      case "battery":
-        return <Battery className="h-6 w-6 text-primary" />;
-      case "tire":
-        return <Car className="h-6 w-6 text-primary" />;
-      case "fuel":
-        return <Fuel className="h-6 w-6 text-primary" />;
-      case "lockout":
-        return <Lock className="h-6 w-6 text-primary" />;
-      case "tow":
-        return <Flag className="h-6 w-6 text-primary" />;
-    }
-  };
-  
-  const getServiceName = () => {
-    if (!job) return "Service";
-    
-    switch (job.serviceType) {
-      case "battery":
-        return "Battery Jump";
-      case "tire":
-        return "Tire Change";
-      case "fuel":
-        return "Fuel Delivery";
-      case "lockout":
-        return "Lockout Assistance";
-      case "tow":
-        return "Towing Service";
-    }
-  };
-  
   if (!job) return null;
   
   return (
@@ -125,10 +92,10 @@ const RequestConfirmation: React.FC = () => {
           <Card className="p-4">
             <div className="flex items-center gap-3">
               <div className="p-2 bg-accent rounded-md">
-                {getIcon()}
+                {getServiceIcon(job.serviceType)}
               </div>
               <div className="flex-1">
-                <h3 className="font-bold">{getServiceName()}</h3>
+                <h3 className="font-bold">{getServiceTitle(job.serviceType)}</h3>
                 <p className="text-sm text-muted-foreground">
                   {job.customerLocation.address || "Current Location"}
                 </p>

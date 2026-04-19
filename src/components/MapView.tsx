@@ -33,8 +33,6 @@ const MapView: React.FC<MapViewProps> = ({
         
         const API_KEY = config.googleMapsApiKey;
         
-        console.log('Initializing Google Maps with API key:', API_KEY ? 'Present' : 'Missing');
-        
         if (!API_KEY) {
           throw new Error('Google Maps API key is missing. Please add VITE_GOOGLE_MAPS_API_KEY to your .env file');
         }
@@ -124,9 +122,7 @@ const MapView: React.FC<MapViewProps> = ({
         }
         
         setIsLoading(false);
-        console.log('Google Map successfully initialized!');
       } catch (err) {
-        console.error('Error loading Google Maps:', err);
         setError(`Failed to load map: ${err instanceof Error ? err.message : 'Unknown error'}`);
         setIsLoading(false);
       }
