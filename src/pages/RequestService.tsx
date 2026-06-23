@@ -4,6 +4,7 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import { ServiceType, ServiceRequest, useApp } from "@/contexts/AppContext";
+import { getServicePrice, getServiceTitle } from "@/utils/serviceTypeUtils";
 import { useToast } from "@/hooks/use-toast";
 import { MapPin, Camera, Car, Shield, Zap, Clock } from "lucide-react";
 import { useEffect, useState } from "react";
@@ -51,29 +52,6 @@ export default function RequestService() {
     return <div>Invalid service type</div>;
   }
   
-  const getServicePrice = (type: ServiceType) => {
-    switch (type) {
-      case "battery": return 49;
-      case "tire": return 69;
-      case "fuel": return 45;
-      case "lockout": return 75;
-      case "tow": return 99;
-      case "charging": return 59;
-      default: return 69;
-    }
-  };
-
-  const getServiceTitle = (type: ServiceType) => {
-    switch (type) {
-      case "battery": return "Battery Jump";
-      case "tire": return "Tire Change";
-      case "fuel": return "Fuel Delivery";
-      case "lockout": return "Lockout Service";
-      case "tow": return "Towing Service";
-      case "charging": return "EV Charging";
-      default: return "Roadside Service";
-    }
-  };
 
   const handleSubmitRequest = () => {
     if (!vehicleDetails || !description || !customer) {

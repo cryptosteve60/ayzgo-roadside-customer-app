@@ -35,11 +35,10 @@ export const useFamilyTracking = () => {
   const [shareLocation, setShareLocation] = useState(true);
   const [autoNotify, setAutoNotify] = useState(true);
 
-  // Update location for family when service is active
+  // TODO: Push location update to backend when sharing is active
   useEffect(() => {
     if (shareLocation && currentLocation) {
-      // Simulate sharing location with family
-      console.log('Sharing location with family:', currentLocation);
+      // no-op until backend location sharing is implemented
     }
   }, [shareLocation, currentLocation]);
 
@@ -67,10 +66,10 @@ export const useFamilyTracking = () => {
 
   const notifyFamily = (message: string) => {
     const trackingMembers = familyMembers.filter(m => m.isTracking);
-    trackingMembers.forEach(member => {
-      console.log(`Notifying ${member.name}: ${message}`);
-      // Future: Send SMS/push notification
+    trackingMembers.forEach((_member) => {
+      void _member; // TODO: Send SMS/push notification via backend
     });
+    void message;
   };
 
   return {

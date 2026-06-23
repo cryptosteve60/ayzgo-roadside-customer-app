@@ -25,13 +25,9 @@ const CustomerHome: React.FC = () => {
   const [address, setAddress] = useState<AddressData | null>(null);
 
   const fetchAddress = async (lat: number, lng: number) => {
-    console.log('Fetching address for coordinates:', { lat, lng });
     const addressData = await mapsService.reverseGeocode(lat, lng);
     if (addressData) {
       setAddress(addressData);
-      console.log('Address updated:', addressData);
-    } else {
-      console.log('Failed to fetch address');
     }
   };
 

@@ -5,21 +5,18 @@ import { useApp } from "@/contexts/AppContext";
 import MapView from "@/components/MapView";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
-import { 
-  ArrowLeft, 
-  Battery, 
-  Car, 
-  CircleCheckIcon, 
-  Clock, 
-  Flag, 
-  Fuel, 
-  Lock,
-  MapPin, 
-  Phone, 
-  Star, 
+import {
+  ArrowLeft,
+  CircleCheckIcon,
+  Clock,
+  MapPin,
+  Phone,
+  Star,
   User
 } from "lucide-react";
 import { toast } from "sonner";
+import { getServiceIcon, getServiceTitle } from "@/utils/serviceTypeUtils";
+import { getStatusColor, getStatusText, isHelperAssigned, isHelperEnRoute, isHelperArrived, isJobCompleted } from "@/utils/statusUtils";
 
 const JobDetails: React.FC = () => {
   const navigate = useNavigate();
@@ -39,91 +36,6 @@ const JobDetails: React.FC = () => {
       </div>
     );
   }
-  
-  const getIcon = () => {
-    switch (job.serviceType) {
-      case "battery":
-        return <Battery className="h-6 w-6 text-primary" />;
-      case "tire":
-        return <Car className="h-6 w-6 text-primary" />;
-      case "fuel":
-        return <Fuel className="h-6 w-6 text-primary" />;
-      case "lockout":
-        return <Lock className="h-6 w-6 text-primary" />;
-      case "tow":
-        return <Flag className="h-6 w-6 text-primary" />;
-    }
-  };
-  
-  const getServiceName = () => {
-    switch (job.serviceType) {
-      case "battery":
-        return "Battery Jump";
-      case "tire":
-        return "Tire Change";
-      case "fuel":
-        return "Fuel Delivery";
-      case "lockout":
-        return "Lockout Assistance";
-      case "tow":
-        return "Towing Service";
-      case "charging":
-        return "EV Charging";
-    }
-  };
-  
-  const getStatusText = () => {
-    switch (job.status) {
-      case "requested":
-        return "Request submitted - Finding helper";
-      case "searching":
-        return "Searching for nearby helpers";
-      case "driver_assigned":
-      case "accepted":
-        return "Helper assigned to your request";
-      case "driver_enroute":
-      case "enroute":
-        return "Helper is on the way";
-      case "driver_arrived":
-      case "arrived":
-        return "Helper has arrived at your location";
-      case "in_progress":
-      case "inProgress":
-        return "Service in progress";
-      case "completed":
-        return "Service completed successfully";
-      case "cancelled":
-        return "Request cancelled";
-      default:
-        return "Request status unknown";
-    }
-  };
-  
-  const getStatusColor = () => {
-    switch (job.status) {
-      case "requested":
-      case "searching":
-        return "bg-yellow-500";
-      case "driver_assigned":
-      case "accepted":
-        return "bg-blue-500";
-      case "driver_enroute":
-      case "enroute":
-        return "bg-blue-600";
-      case "driver_arrived":
-      case "arrived":
-        return "bg-indigo-500";
-      case "in_progress":
-      case "inProgress":
-        return "bg-purple-500";
-      case "completed":
-        return "bg-green-500";
-      case "cancelled":
-        return "bg-red-500";
-      default:
-        return "bg-gray-500";
-    }
-  };
   
   const handleContactHelper = () => {
     toast.success("Contacting your helper...");
@@ -153,8 +65,8 @@ const JobDetails: React.FC = () => {
         {/* Status Card */}
         <Card className="p-4">
           <div className="flex items-center gap-3">
-            <div className={`h-3 w-3 rounded-full ${getStatusColor()}`}></div>
-            <span className="font-medium">{getStatusText()}</span>
+            <div className={`h-3 w-3 rounded-full ${getStatusColor(job.status)}`}></div>
+            <span className="font-medium">{getStatusText(job.status)}</span>
           </div>
         </Card>
         
@@ -167,10 +79,10 @@ const JobDetails: React.FC = () => {
           <Card className="p-4">
             <div className="flex items-center gap-3 mb-3">
               <div className="p-2 bg-accent rounded-md">
-                {getIcon()}
+                {getServiceIcon(job.serviceType)}
               </div>
               <div className="flex-1">
-                <h3 className="font-bold">{getServiceName()}</h3>
+                <h3 className="font-bold">{getServiceTitle(job.serviceType)}</h3>
               </div>
               <div className="font-bold text-primary">${job.price}</div>
             </div>
@@ -240,15 +152,13 @@ const JobDetails: React.FC = () => {
               {/* Helper Found */}
               <div className="relative">
                 <div className={`absolute -left-[1.65rem] h-6 w-6 rounded-full flex items-center justify-center ${
-                  ["driver_assigned", "accepted", "driver_enroute", "enroute", "driver_arrived", "arrived", "in_progress", "inProgress", "completed"].includes(job.status)
-                    ? "bg-green-500" 
-                    : "bg-secondary border border-muted"
+                  isHelperAssigned(job.status) ? "bg-green-500" : "bg-secondary border border-muted"
                 }`}>
-                  {["driver_assigned", "accepted", "driver_enroute", "enroute", "driver_arrived", "arrived", "in_progress", "inProgress", "completed"].includes(job.status) && (
+                  {isHelperAssigned(job.status) && (
                     <CircleCheckIcon className="h-4 w-4 text-white" />
                   )}
                 </div>
-                <p className={`font-medium ${!["driver_assigned", "accepted", "driver_enroute", "enroute", "driver_arrived", "arrived", "in_progress", "inProgress", "completed"].includes(job.status) ? "text-muted-foreground" : ""}`}>
+                <p className={`font-medium ${!isHelperAssigned(job.status) ? "text-muted-foreground" : ""}`}>
                   Helper Found
                 </p>
                 {job.acceptedAt && (
@@ -261,47 +171,41 @@ const JobDetails: React.FC = () => {
               {/* En Route */}
               <div className="relative">
                 <div className={`absolute -left-[1.65rem] h-6 w-6 rounded-full flex items-center justify-center ${
-                  ["driver_enroute", "enroute", "driver_arrived", "arrived", "in_progress", "inProgress", "completed"].includes(job.status)
-                    ? "bg-green-500" 
-                    : "bg-secondary border border-muted"
+                  isHelperEnRoute(job.status) ? "bg-green-500" : "bg-secondary border border-muted"
                 }`}>
-                  {["driver_enroute", "enroute", "driver_arrived", "arrived", "in_progress", "inProgress", "completed"].includes(job.status) && (
+                  {isHelperEnRoute(job.status) && (
                     <CircleCheckIcon className="h-4 w-4 text-white" />
                   )}
                 </div>
-                <p className={`font-medium ${!["driver_enroute", "enroute", "driver_arrived", "arrived", "in_progress", "inProgress", "completed"].includes(job.status) ? "text-muted-foreground" : ""}`}>
+                <p className={`font-medium ${!isHelperEnRoute(job.status) ? "text-muted-foreground" : ""}`}>
                   Helper En Route
                 </p>
               </div>
-              
+
               {/* Arrived */}
               <div className="relative">
                 <div className={`absolute -left-[1.65rem] h-6 w-6 rounded-full flex items-center justify-center ${
-                  ["driver_arrived", "arrived", "in_progress", "inProgress", "completed"].includes(job.status)
-                    ? "bg-green-500" 
-                    : "bg-secondary border border-muted"
+                  isHelperArrived(job.status) ? "bg-green-500" : "bg-secondary border border-muted"
                 }`}>
-                  {["driver_arrived", "arrived", "in_progress", "inProgress", "completed"].includes(job.status) && (
+                  {isHelperArrived(job.status) && (
                     <CircleCheckIcon className="h-4 w-4 text-white" />
                   )}
                 </div>
-                <p className={`font-medium ${!["driver_arrived", "arrived", "in_progress", "inProgress", "completed"].includes(job.status) ? "text-muted-foreground" : ""}`}>
+                <p className={`font-medium ${!isHelperArrived(job.status) ? "text-muted-foreground" : ""}`}>
                   Helper Arrived
                 </p>
               </div>
-              
+
               {/* Completed */}
               <div className="relative">
                 <div className={`absolute -left-[1.65rem] h-6 w-6 rounded-full flex items-center justify-center ${
-                  job.status === "completed" 
-                    ? "bg-green-500" 
-                    : "bg-secondary border border-muted"
+                  isJobCompleted(job.status) ? "bg-green-500" : "bg-secondary border border-muted"
                 }`}>
-                  {job.status === "completed" && (
+                  {isJobCompleted(job.status) && (
                     <CircleCheckIcon className="h-4 w-4 text-white" />
                   )}
                 </div>
-                <p className={`font-medium ${job.status !== "completed" ? "text-muted-foreground" : ""}`}>
+                <p className={`font-medium ${!isJobCompleted(job.status) ? "text-muted-foreground" : ""}`}>
                   Service Completed
                 </p>
                 {job.completedAt && (

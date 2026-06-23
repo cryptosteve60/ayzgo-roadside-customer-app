@@ -3,8 +3,8 @@ import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { ServiceType } from "@/contexts/AppContext";
-import { Battery, Car, Flag, Fuel, Lock, Plug } from "lucide-react";
 import { useNavigate } from "react-router-dom";
+import { getServiceIcon } from "@/utils/serviceTypeUtils";
 
 interface ServiceCardProps {
   type: ServiceType;
@@ -15,23 +15,6 @@ interface ServiceCardProps {
 
 export default function ServiceCard({ type, title, price, description }: ServiceCardProps) {
   const navigate = useNavigate();
-  
-  const getIcon = () => {
-    switch (type) {
-      case "battery":
-        return <Battery className="h-8 w-8 text-primary" />;
-      case "tire":
-        return <Car className="h-8 w-8 text-primary" />;
-      case "fuel":
-        return <Fuel className="h-8 w-8 text-primary" />;
-      case "lockout":
-        return <Lock className="h-8 w-8 text-primary" />;
-      case "tow":
-        return <Flag className="h-8 w-8 text-primary" />;
-      case "charging":
-        return <Plug className="h-8 w-8 text-primary" />;
-    }
-  };
   
   const handleSelect = () => {
     navigate(`/request/${type}`);
@@ -47,7 +30,7 @@ export default function ServiceCard({ type, title, price, description }: Service
       
       <div className="flex items-center justify-between mb-4">
         <div className="p-2 bg-accent rounded-md">
-          {getIcon()}
+          {getServiceIcon(type, { className: "h-8 w-8 text-primary" })}
         </div>
         <span className="text-primary font-bold text-lg">${price}</span>
       </div>

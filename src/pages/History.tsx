@@ -5,18 +5,19 @@ import { Badge } from "@/components/ui/badge";
 import { Input } from "@/components/ui/input";
 import { useNavigate } from "react-router-dom";
 import { useApp } from "@/contexts/AppContext";
-import { 
-  History as HistoryIcon, 
-  Search, 
-  Star, 
-  Calendar, 
-  MapPin, 
-  Receipt, 
+import {
+  History as HistoryIcon,
+  Search,
+  Star,
+  Calendar,
+  MapPin,
+  Receipt,
   RotateCcw,
   Download,
-  Filter
 } from "lucide-react";
 import { useState } from "react";
+import { getStatusColor } from "@/utils/statusUtils";
+import { formatServiceType } from "@/utils/serviceTypeUtils";
 
 export default function History() {
   const navigate = useNavigate();
@@ -31,22 +32,7 @@ export default function History() {
     return matchesSearch && matchesFilter;
   });
 
-  const getStatusColor = (status: string) => {
-    switch (status) {
-      case "completed": return "bg-green-500";
-      case "cancelled": return "bg-red-500";
-      case "in_progress": return "bg-blue-500";
-      default: return "bg-gray-500";
-    }
-  };
-
-  const formatServiceType = (type: string) => {
-    return type.split('_').map(word => 
-      word.charAt(0).toUpperCase() + word.slice(1)
-    ).join(' ');
-  };
-
-  const totalSpent = requestHistory
+const totalSpent = requestHistory
     .filter(r => r.status === 'completed')
     .reduce((sum, r) => sum + (r.price || 0), 0);
 
